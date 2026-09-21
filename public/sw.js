@@ -1,11 +1,10 @@
 const VERSION = 'rallx-shell-v2';
-const SHELL = ['/', '/manifest.webmanifest', '/icon.svg'];
+const SHELL = ['/', '/manifest.webmanifest', '/icon.svg', '/icons/icon-192.png', '/icons/icon-512.png'];
 const isPublicShellRequest = (request) => {
-  if (request.method !== 'GET') return false;
+  if (request.method !== 'GET' || (request.mode === 'navigate' && new URL(request.url).pathname !== '/')) return false;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return false;
-  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/auth/') || url.pathname.startsWith('/attachments/')) return false;
-  return request.mode === 'navigate' || SHELL.includes(url.pathname);
+  return url.pathname === '/' || SHELL.includes(url.pathname);
 };
 self.addEventListener('install', (event) => event.waitUntil(caches.open(VERSION).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith('rallx-shell-') && key !== VERSION).map((key) => caches.delete(key)))).then(() => self.clients.claim())));

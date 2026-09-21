@@ -19,15 +19,26 @@ npm run lint
 npm run typecheck
 npm test
 npm run build
-# Optional container check (requires Docker and POSTGRES_PASSWORD/AUTH_SECRET):
+# Optional container check (requires Docker, DATABASE_URL, POSTGRES_PASSWORD, and AUTH_SECRET):
 docker compose config
 docker build -t rallx-kanban .
 ```
 
-For a local database, copy `.env.example` to `.env`, set non-production development values, then run `npx prisma migrate dev --name init` before adding a database-backed service layer. Compose intentionally requires `POSTGRES_PASSWORD` and `AUTH_SECRET`; it does not contain real credentials.
+For a local database, copy `.env.example` to `.env` and set non-production development values. The committed baseline is `prisma/migrations/0001_initial/migration.sql`; apply it with `npm run prisma:migrate:deploy` (or `npx prisma migrate dev` for local schema iteration). Compose requires an explicit `DATABASE_URL`, `POSTGRES_PASSWORD`, and `AUTH_SECRET`; set `DATABASE_URL` using the same `POSTGRES_USER` and `POSTGRES_DB` values as the database service, for example `postgresql://appuser:password@db:5432/rallx`.
+
+### Release procedure
+
+Run `docker compose build`, then apply migrations before starting the web process:
+
+```bash
+docker compose run --rm app ./node_modules/.bin/prisma migrate deploy
+docker compose up -d
+```
+
+The compose `app` command also runs `prisma migrate deploy` before the standalone server starts. This is an explicit deployment step for the planned database service; the browser prototype itself does not run migrations or provide an API.
 
 ## Architecture and limitations
 
-`app/` is the App Router shell, `components/kanban-app.tsx` owns interactive board state, and `lib/mock-data.ts` is the replaceable local repository boundary. `prisma/schema.prisma` defines tenant-scoped persistence primitives for the planned PostgreSQL service layer, including membership, lifecycle/versioned tickets, discussions, files, audit history, integrations, identity providers, MCP token hashes, and GitHub sync metadata.
+`app/` is the App Router shell, `components/kanban-app.tsx` owns interactive board state, and `lib/mock-data.ts` is the replaceable local repository boundary. `prisma/schema.prisma` defines tenant-scoped persistence primitives for the planned PostgreSQL service layer. Child records carry `tenantId`; composite foreign keys bind projects, tickets, memberships, actors, and integrations to the same tenant. PostgreSQL constraints therefore reject cross-tenant references, but application authorization and a backend service are still required.
 
 Archive/restore/delete and comments currently update local browser state only and reset on refresh. GitHub, OIDC/Auth, and MCP settings are explicitly labelled scaffolded/not connected. The service worker uses an allowlisted public shell cache and bypasses API, auth, and attachment paths; it is not an offline data store.
