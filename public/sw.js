@@ -1,1 +1,18 @@
-const CACHE='rallx-shell-v1'; self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/','/manifest.webmanifest','/icon.svg'])))); self.addEventListener('fetch',e=>{if(e.request.method==='GET'&&new URL(e.request.url).origin===location.origin)e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(x=>{const copy=x.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return x})))})
+const VERSION = 'rallx-shell-v2';
+const SHELL = ['/', '/manifest.webmanifest', '/icon.svg'];
+const isPublicShellRequest = (request) => {
+  if (request.method !== 'GET') return false;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return false;
+  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/auth/') || url.pathname.startsWith('/attachments/')) return false;
+  return request.mode === 'navigate' || SHELL.includes(url.pathname);
+};
+self.addEventListener('install', (event) => event.waitUntil(caches.open(VERSION).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())));
+self.addEventListener('activate', (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith('rallx-shell-') && key !== VERSION).map((key) => caches.delete(key)))).then(() => self.clients.claim())));
+self.addEventListener('fetch', (event) => {
+  if (!isPublicShellRequest(event.request)) return;
+  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+    if (response.ok) caches.open(VERSION).then((cache) => cache.put(event.request, response.clone()));
+    return response;
+  })));
+});
