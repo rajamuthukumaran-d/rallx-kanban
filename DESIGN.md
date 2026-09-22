@@ -1,124 +1,124 @@
 ---
 name: Developer Console MD3
 colors:
-  surface: '#111417'
-  surface-dim: '#111417'
-  surface-bright: '#36393e'
-  surface-container-lowest: '#0b0e12'
-  surface-container-low: '#191c20'
-  surface-container: '#1d2024'
-  surface-container-high: '#272a2e'
-  surface-container-highest: '#323539'
-  on-surface: '#e1e2e8'
-  on-surface-variant: '#c3c6d0'
-  inverse-surface: '#e1e2e8'
-  inverse-on-surface: '#2e3135'
-  outline: '#8d9199'
-  outline-variant: '#43474f'
-  surface-tint: '#a9c8fb'
-  primary: '#d3e2ff'
-  on-primary: '#0a315b'
-  primary-container: '#a8c7fa'
-  on-primary-container: '#33537f'
-  inverse-primary: '#405f8c'
-  secondary: '#b6c7e9'
-  on-secondary: '#1f314c'
-  secondary-container: '#394a66'
-  on-secondary-container: '#a8b9da'
-  tertiary: '#98f2de'
-  on-tertiary: '#00382f'
-  tertiary-container: '#7cd5c2'
-  on-tertiary-container: '#005c50'
-  error: '#ffb4ab'
-  on-error: '#690005'
-  error-container: '#93000a'
-  on-error-container: '#ffdad6'
-  primary-fixed: '#d5e3ff'
-  primary-fixed-dim: '#a9c8fb'
-  on-primary-fixed: '#001c3b'
-  on-primary-fixed-variant: '#274773'
-  secondary-fixed: '#d6e3ff'
-  secondary-fixed-dim: '#b6c7e9'
-  on-secondary-fixed: '#081c36'
-  on-secondary-fixed-variant: '#364763'
-  tertiary-fixed: '#9af3df'
-  tertiary-fixed-dim: '#7dd6c3'
-  on-tertiary-fixed: '#00201b'
-  on-tertiary-fixed-variant: '#005045'
-  background: '#111417'
-  on-background: '#e1e2e8'
-  surface-variant: '#323539'
+  surface: "#111417"
+  surface-dim: "#111417"
+  surface-bright: "#36393e"
+  surface-container-lowest: "#0b0e12"
+  surface-container-low: "#191c20"
+  surface-container: "#1d2024"
+  surface-container-high: "#272a2e"
+  surface-container-highest: "#323539"
+  on-surface: "#e1e2e8"
+  on-surface-variant: "#c3c6d0"
+  inverse-surface: "#e1e2e8"
+  inverse-on-surface: "#2e3135"
+  outline: "#8d9199"
+  outline-variant: "#43474f"
+  surface-tint: "#a9c8fb"
+  primary: "#d3e2ff"
+  on-primary: "#0a315b"
+  primary-container: "#a8c7fa"
+  on-primary-container: "#33537f"
+  inverse-primary: "#405f8c"
+  secondary: "#b6c7e9"
+  on-secondary: "#1f314c"
+  secondary-container: "#394a66"
+  on-secondary-container: "#a8b9da"
+  tertiary: "#98f2de"
+  on-tertiary: "#00382f"
+  tertiary-container: "#7cd5c2"
+  on-tertiary-container: "#005c50"
+  error: "#ffb4ab"
+  on-error: "#690005"
+  error-container: "#93000a"
+  on-error-container: "#ffdad6"
+  primary-fixed: "#d5e3ff"
+  primary-fixed-dim: "#a9c8fb"
+  on-primary-fixed: "#001c3b"
+  on-primary-fixed-variant: "#274773"
+  secondary-fixed: "#d6e3ff"
+  secondary-fixed-dim: "#b6c7e9"
+  on-secondary-fixed: "#081c36"
+  on-secondary-fixed-variant: "#364763"
+  tertiary-fixed: "#9af3df"
+  tertiary-fixed-dim: "#7dd6c3"
+  on-tertiary-fixed: "#00201b"
+  on-tertiary-fixed-variant: "#005045"
+  background: "#111417"
+  on-background: "#e1e2e8"
+  surface-variant: "#323539"
 typography:
   headline-lg:
     fontFamily: Inter
     fontSize: 32px
-    fontWeight: '600'
+    fontWeight: "600"
     lineHeight: 40px
     letterSpacing: -0.02em
   headline-md:
     fontFamily: Inter
     fontSize: 28px
-    fontWeight: '600'
+    fontWeight: "600"
     lineHeight: 36px
     letterSpacing: -0.01em
   headline-sm:
     fontFamily: Inter
     fontSize: 24px
-    fontWeight: '600'
+    fontWeight: "600"
     lineHeight: 32px
     letterSpacing: 0em
   title-lg:
     fontFamily: Inter
     fontSize: 20px
-    fontWeight: '500'
+    fontWeight: "500"
     lineHeight: 26px
     letterSpacing: 0em
   title-md:
     fontFamily: Inter
     fontSize: 16px
-    fontWeight: '500'
+    fontWeight: "500"
     lineHeight: 24px
     letterSpacing: 0.01em
   title-sm:
     fontFamily: Inter
     fontSize: 14px
-    fontWeight: '600'
+    fontWeight: "600"
     lineHeight: 20px
     letterSpacing: 0.01em
   body-lg:
     fontFamily: Inter
     fontSize: 16px
-    fontWeight: '400'
+    fontWeight: "400"
     lineHeight: 24px
     letterSpacing: 0.01em
   body-md:
     fontFamily: Inter
     fontSize: 14px
-    fontWeight: '400'
+    fontWeight: "400"
     lineHeight: 20px
     letterSpacing: 0.02em
   body-sm:
     fontFamily: Inter
     fontSize: 12px
-    fontWeight: '400'
+    fontWeight: "400"
     lineHeight: 16px
     letterSpacing: 0.03em
   label-lg:
     fontFamily: JetBrains Mono
     fontSize: 13px
-    fontWeight: '500'
+    fontWeight: "500"
     lineHeight: 18px
     letterSpacing: 0.02em
   label-md:
     fontFamily: JetBrains Mono
     fontSize: 11px
-    fontWeight: '500'
+    fontWeight: "500"
     lineHeight: 16px
     letterSpacing: 0.04em
   label-sm:
     fontFamily: JetBrains Mono
     fontSize: 10px
-    fontWeight: '500'
+    fontWeight: "500"
     lineHeight: 14px
     letterSpacing: 0.05em
 rounded:
@@ -151,6 +151,7 @@ The aesthetic fuses utilitarian enterprise rigor with the fluid, ergonomic warmt
 The system implements the MD3 dark tonal palette, prioritizing high legibility, accessible contrast ratios (WCAG AAA for core text, AA for supporting UI), and strict semantic role attribution.
 
 ### Core Roles
+
 - **Primary (`#a8c7fa`):** Electric soft indigo. Applied to primary CTAs, active radio/checkbox states, focused border treatments, and hero indicators.
 - **On Primary (`#062e6f`):** High-contrast deep navy ensuring razor-sharp legibility over primary fills.
 - **Primary Container (`#0842a0`):** Deep indigo base for prominent cards, primary buttons with tonal priority, and active navigation indicators.
@@ -161,12 +162,15 @@ The system implements the MD3 dark tonal palette, prioritizing high legibility, 
 - **Outline Variant (`#44474f`):** Subtle boundaries separating high-density ticket metadata, column tracks, and table rows.
 
 ### Tonal Accents (Status & Badges)
+
 - **Success / Healthy:** Base `#7cd5c2` (Teal-Emerald), Container `#005144`, On-Container `#9ef2de`. Used for passed CI/CD pipelines, merged pull requests, and closed milestones.
 - **Warning / Stalled:** Base `#fbc02d` (Amber), Container `#4c3b00`, On-Container `#ffe082`. Applied to flaky builds, blocked dependencies, and staging drift.
 - **Critical / Blocker:** Base `#ffb4ab` (Coral-Rose), Container `#93000a`, On-Container `#ffdad6`. Reserved for P0 incident trackers, failing pipeline runs, and review vetoes.
 
 ### State Layers (Overlays)
+
 Interactions do not replace colors; they composite an `on-surface` or `primary` state layer:
+
 - **Hover:** 8% opacity overlay.
 - **Focus:** 12% opacity overlay.
 - **Pressed:** 12% opacity overlay.
@@ -180,6 +184,7 @@ Typography balances ergonomic UI scannability with the data density requirements
 - **Technical Readouts & Metadata (JetBrains Mono):** Reserved for MD3 labels, commit hashes, branch paths, runtime metrics, ticket ID badges (`SYS-4028`), and table column keys. Its fixed-width metric alignment ensures columnar numbers and status flags do not jitter during dynamic updates.
 
 ### Scaling & Readability Rules
+
 - Numerical performance metrics (e.g., latency, code coverage percentages) must always render using `label-md` or `label-lg` with tabular lining figures.
 - Ticket headers on Kanban boards strictly utilize `title-sm` with a truncated 2-line maximum clamping rule, while descriptions scale down to `body-sm` to maintain compact vertically stacked lanes.
 
@@ -188,11 +193,13 @@ Typography balances ergonomic UI scannability with the data density requirements
 The layout is built on a responsive, dense continuous layout model designed to maximize spatial usage across ultrawide monitors and developer workstations.
 
 ### Structural Architecture
+
 - **Persistent Navigation Rail:** A fixed 80px (collapsible to 64px) left rail anchoring primary developer tools (Kanban, Pipelines, Repos, Settings).
 - **Kanban Board Canvas:** Operates as an independent horizontal scroll container with auto-expanding vertical columns. Columns maintain a strict min-width of 280px and max-width of 340px, spaced by `gutter` (1rem).
 - **Split-Pane Detail View:** Clicking an issue card triggers an MD3 side sheet overlay spanning 420px to 540px anchored to the right edge, without reflowing the underlying Kanban column offsets.
 
 ### Responsive Breakpoints
+
 - **Compact (< 600px):** Single-column stacked view; bottom navigation replaces the left rail; issue cards span 100% viewport width with `margin-compact`.
 - **Medium (600px - 1024px):** 2-to-3 column swipeable Kanban track; rail collapses to compact icon-only format (56px).
 - **Expanded (> 1024px):** Full multi-lane board view; side inspection drawer mounts concurrently with zero viewport displacement.
@@ -221,17 +228,20 @@ The design system adheres to MD3's expressive roundedness schema, calibrated to 
 ## Components
 
 ### Buttons
+
 - **Filled Button:** Reserved for primary actions (e.g., "Create Sprint", "Deploy"). Background `#a8c7fa`, text `#062e6f`, fully pill-shaped (`rounded-full`), height 36px, `label-lg`.
 - **Tonal Button:** For secondary board actions (e.g., "Add Issue"). Background `Secondary Container` (`#334460`), text `On Secondary Container` (`#d7e3ff`).
 - **Outlined Button:** Transparent background, 1px border `Outline` (`#8e9099`), text `On Surface` (`#e2e2e9`).
 
 ### Chips (MD3 Filter & Input Chips)
+
 - Height: 32px. Border radius: full pill.
 - **Inactive:** `Surface Container Low` fill with 1px `Outline Variant` border. Text: `On Surface Variant`.
 - **Selected Filter Chip:** `Secondary Container` fill with no border. Leading icon includes a 16px checkmark in `On Secondary Container`.
 - **Badge Chips (Code/Git):** Font: `JetBrains Mono` (`label-sm`), vertical padding 2px, horizontal 6px, radius 4px (`rounded-sm`).
 
 ### Kanban Cards
+
 - Base surface: `Surface Container` (`#1d2024`).
 - Border: 1px continuous border using `Outline Variant` (`#44474f`).
 - Padding: `space-md` (0.75rem / 12px) for optimal vertical density.
@@ -240,16 +250,19 @@ The design system adheres to MD3's expressive roundedness schema, calibrated to 
 - Footer: Labels container with priority icon (Critical rose dot, High amber dot, Low slate dot) and comment/attachment count indicators in `On Surface Variant`.
 
 ### Checkboxes & Radio Buttons
+
 - Selected state fills with `Primary` (`#a8c7fa`), rendering inner glyph/dot in `On Primary` (`#062e6f`).
 - Unselected state renders a 2px outline in `Outline` (`#8e9099`).
 - Targets maintain a 40x40px touch/click target with centered 18x18px glyph visuals.
 
 ### Input Fields
+
 - MD3 Outlined TextField pattern.
 - Resting: 1px border in `Outline`, label floating on container edge in `On Surface Variant`.
 - Focus: 2px border in `Primary`, floating label in `Primary`.
 - Dense sizing: 44px total box height for search filters and board query bars.
 
 ### Navigation Rail
+
 - Positioned vertically on the left, 80px width, surface `Surface Dim` (`#111318`).
 - Active item uses an MD3 horizontal indicator pill (56px width, 32px height) filled with `Primary Container` (`#0842a0`), housing an `On Primary Container` (`#d3e3fd`) icon, with a `label-sm` title centered below.

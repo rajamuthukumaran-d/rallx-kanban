@@ -1,59 +1,687 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { columns, initialTickets, type Status, type Ticket } from '../lib/mock-data';
+import { useEffect, useMemo, useState } from "react";
+import {
+  columns,
+  initialTickets,
+  type Status,
+  type Ticket,
+} from "../lib/mock-data";
 
 type LocalTicket = Ticket & { archived?: boolean };
 
 export default function KanbanApp() {
   const [tickets, setTickets] = useState<LocalTicket[]>(initialTickets);
-  const [selected, setSelected] = useState('RLX-1042');
-  const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState('all');
-  const [view, setView] = useState('board');
+  const [selected, setSelected] = useState("RLX-1042");
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [view, setView] = useState("board");
   const [dragged, setDragged] = useState<string | null>(null);
-  const [comment, setComment] = useState('');
-  const [commentHistory, setCommentHistory] = useState<Record<string, string[]>>({});
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [comment, setComment] = useState("");
+  const [commentHistory, setCommentHistory] = useState<
+    Record<string, string[]>
+  >({});
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [railCollapsed, setRailCollapsed] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('rallx-theme') as 'dark' | 'light' | null;
+    const savedTheme = localStorage.getItem("rallx-theme") as
+      | "dark"
+      | "light"
+      | null;
     if (savedTheme) setTheme(savedTheme);
-    const savedTickets = localStorage.getItem('rallx-tickets');
+    const savedTickets = localStorage.getItem("rallx-tickets");
     if (savedTickets) setTickets(JSON.parse(savedTickets));
-    const savedComments = localStorage.getItem('rallx-comments');
+    const savedComments = localStorage.getItem("rallx-comments");
     if (savedComments) setCommentHistory(JSON.parse(savedComments));
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+    if ("serviceWorker" in navigator)
+      navigator.serviceWorker.register("/sw.js").catch(() => undefined);
   }, []);
-  useEffect(() => { localStorage.setItem('rallx-theme', theme); document.documentElement.dataset.theme = theme; }, [theme]);
-  useEffect(() => { localStorage.setItem('rallx-tickets', JSON.stringify(tickets)); }, [tickets]);
-  useEffect(() => { localStorage.setItem('rallx-comments', JSON.stringify(commentHistory)); }, [commentHistory]);
+  useEffect(() => {
+    localStorage.setItem("rallx-theme", theme);
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+  useEffect(() => {
+    localStorage.setItem("rallx-tickets", JSON.stringify(tickets));
+  }, [tickets]);
+  useEffect(() => {
+    localStorage.setItem("rallx-comments", JSON.stringify(commentHistory));
+  }, [commentHistory]);
 
-  const visible = useMemo(() => tickets.filter((t) => !t.archived && (t.id + ' ' + t.title + ' ' + t.tags.join(' ')).toLowerCase().includes(query.toLowerCase()) && (filter === 'all' || (filter === 'mine' ? t.assignee === 'Elena Vance' : t.priority === 'urgent'))), [tickets, query, filter]);
+  const visible = useMemo(
+    () =>
+      tickets.filter(
+        (t) =>
+          !t.archived &&
+          (t.id + " " + t.title + " " + t.tags.join(" "))
+            .toLowerCase()
+            .includes(query.toLowerCase()) &&
+          (filter === "all" ||
+            (filter === "mine"
+              ? t.assignee === "Elena Vance"
+              : t.priority === "urgent")),
+      ),
+    [tickets, query, filter],
+  );
   const archived = tickets.filter((t) => t.archived);
   const sel = tickets.find((t) => t.id === selected);
-  const move = (id: string, status: Status) => setTickets((previous) => previous.map((t) => t.id === id ? { ...t, status } : t));
-  const add = () => { const ticket: LocalTicket = { id: `RLX-${1060 + tickets.length}`, title: 'New delivery task', status: 'backlog', priority: 'medium', tags: ['new'], points: 2, assignee: 'Elena Vance', initials: 'EV', comments: 0, description: 'Add acceptance criteria for this task.' }; setTickets((previous) => [...previous, ticket]); setSelected(ticket.id); setView('board'); };
-  const archive = (id: string) => { setTickets((previous) => previous.map((t) => t.id === id ? { ...t, archived: true } : t)); setSelected(''); setView('archive'); };
-  const restore = (id: string) => setTickets((previous) => previous.map((t) => t.id === id ? { ...t, archived: false } : t));
-  const remove = (id: string) => { setTickets((previous) => previous.filter((t) => t.id !== id)); setSelected(''); };
-  const addComment = () => { if (!sel || !comment.trim()) return; setCommentHistory((previous) => ({ ...previous, [sel.id]: [...(previous[sel.id] ?? []), comment.trim()] })); setTickets((previous) => previous.map((t) => t.id === sel.id ? { ...t, comments: t.comments + 1 } : t)); setComment(''); };
+  const move = (id: string, status: Status) =>
+    setTickets((previous) =>
+      previous.map((t) => (t.id === id ? { ...t, status } : t)),
+    );
+  const add = () => {
+    const ticket: LocalTicket = {
+      id: `RLX-${1060 + tickets.length}`,
+      title: "New delivery task",
+      status: "backlog",
+      priority: "medium",
+      tags: ["new"],
+      points: 2,
+      assignee: "Elena Vance",
+      initials: "EV",
+      comments: 0,
+      description: "Add acceptance criteria for this task.",
+    };
+    setTickets((previous) => [...previous, ticket]);
+    setSelected(ticket.id);
+    setView("board");
+  };
+  const archive = (id: string) => {
+    setTickets((previous) =>
+      previous.map((t) => (t.id === id ? { ...t, archived: true } : t)),
+    );
+    setSelected("");
+    setView("archive");
+  };
+  const restore = (id: string) =>
+    setTickets((previous) =>
+      previous.map((t) => (t.id === id ? { ...t, archived: false } : t)),
+    );
+  const remove = (id: string) => {
+    setTickets((previous) => previous.filter((t) => t.id !== id));
+    setSelected("");
+  };
+  const addComment = () => {
+    if (!sel || !comment.trim()) return;
+    setCommentHistory((previous) => ({
+      ...previous,
+      [sel.id]: [...(previous[sel.id] ?? []), comment.trim()],
+    }));
+    setTickets((previous) =>
+      previous.map((t) =>
+        t.id === sel.id ? { ...t, comments: t.comments + 1 } : t,
+      ),
+    );
+    setComment("");
+  };
 
-  return <div className={`app-shell ${railCollapsed ? 'rail-collapsed' : ''}`}>
-    <aside className="rail"><div className="brand"><div className="brand-row"><span className="brand-name"><span className="logo">R</span>Rallx Kanban</span><button aria-label={railCollapsed ? 'Expand sidebar' : 'Collapse sidebar'} onClick={() => setRailCollapsed((value) => !value)}>{railCollapsed ? '›' : '‹'}</button></div><div className="tenant"><b>Acme Corp</b><small className="mono">tnt_8932x_us</small></div></div><button className="search" type="button" onClick={() => document.querySelector<HTMLInputElement>('.filter-search')?.focus()} aria-label="Focus ticket filter">⌕ Command / Filter <span className="mono shortcut">⌘K</span></button>
-      <nav className="nav" aria-label="Workspace navigation"><div className="section-label">Workspace</div><Nav active={view === 'board'} onClick={() => setView('board')} label="▦　Board" count={visible.length} /><Nav onClick={() => setView('board')} label="◎　My Work" count={4} /><Nav active={view === 'backlog'} onClick={() => setView('backlog')} label="☷　Backlog" count={visible.filter((t) => t.status === 'backlog').length} /><Nav active={view === 'archive'} onClick={() => setView('archive')} label="▱　Archive" count={archived.length} /><div className="section-label">Pinned projects</div>{['Core Platform', 'Auth Gateway', 'Mobile Client'].map((project, i) => <button className="nav-item" key={project} onClick={() => setQuery(project)} aria-label={`Filter by ${project}`}><span style={{ color: i === 0 ? '#b4f1be' : i === 1 ? '#8d9199' : '#ffdcc1' }}>●　{project}</span><small className="mono">{[84, 19, 31][i]}</small></button>)}</nav>
-      <div className="rail-bottom"><Nav active={view === 'settings'} onClick={() => setView('settings')} label="⚙　Settings" /><button className="nav-item" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>☾ Theme</button><div className="profile"><div className="avatar">EV</div><div><b>Elena Vance</b><div className="muted mono">Lead Architect</div></div></div></div>
-    </aside>
-    <main className="workspace"><header className="toolbar"><div className="toolbar-top"><div className="view-tabs" role="tablist" aria-label="Board views"><button className={view === 'board' ? 'active' : ''} onClick={() => setView('board')}>▦ Board</button><button className={view === 'backlog' ? 'active' : ''} onClick={() => setView('backlog')}>☷ List</button><button disabled title="Analytics is not implemented">⌁ Analytics</button></div><button className="primary" onClick={add}>＋ New Ticket <span className="mono">C</span></button></div><div className="toolbar-bottom"><div className="chips"><input aria-label="Filter tickets" className="filter-search" placeholder="Filter tickets by name, #ID, or tag..." value={query} onChange={(e) => setQuery(e.target.value)} /><button className={filter === 'all' ? 'chip selected' : 'chip'} onClick={() => setFilter('all')}>⚙ Filter</button><button className={filter === 'mine' ? 'chip selected' : 'chip'} onClick={() => setFilter('mine')}>My tickets</button><button className={filter === 'urgent' ? 'chip selected' : 'chip'} onClick={() => setFilter('urgent')}>Urgent</button></div><div className="muted toolbar-summary">Group: <b>Status</b>　•　Order: <b>Priority</b></div></div></header>
-      {view === 'settings' ? <Settings theme={theme} setTheme={setTheme} /> : view === 'archive' ? <Archive tickets={archived} restore={restore} remove={remove} /> : <div className="board-wrap"><section className="board">{columns.map((column) => <div className="column" key={column.id} onDragOver={(e) => e.preventDefault()} onDrop={() => { if (dragged) move(dragged, column.id); setDragged(null); }}><div className="column-head"><div className="column-title"><span className="dot" style={{ background: column.color }} />{column.label}<span className="count">{visible.filter((t) => t.status === column.id).length}</span>{column.limit && <small className="muted">/ {column.limit}</small>}</div><button aria-label={`Add ticket to ${column.label}`} onClick={add}>＋</button></div><div className="cards">{visible.filter((t) => t.status === column.id).map((ticket) => <Card key={ticket.id} t={ticket} selected={selected === ticket.id} dragged={dragged === ticket.id} click={() => setSelected(ticket.id)} start={() => setDragged(ticket.id)} end={() => setDragged(null)} />)}</div></div>)}</section>{sel && <Inspector t={sel} close={() => setSelected('')} comment={comment} setComment={setComment} comments={commentHistory[sel.id] ?? []} addComment={addComment} archive={() => archive(sel.id)} done={() => move(sel.id, 'done')} />}</div>}
-      <footer className="footer"><span><b>{visible.length}</b> tickets　•　<b>{visible.reduce((n, t) => n + t.points, 0)}</b> SP　•　<span style={{ color: '#ffdcc1' }}>{visible.filter((t) => t.status === 'review').length}</span> in review</span><span className="mono">✓ GitHub sync scaffold · Sprint 14: 5d remaining</span></footer><nav className="mobile-nav" aria-label="Mobile navigation"><button onClick={() => setView('board')} aria-label="Board">▦<br />Board</button><button onClick={() => setView('backlog')} aria-label="Backlog">☷<br />Backlog</button><button onClick={add} aria-label="New ticket">＋<br />New</button><button onClick={() => setView('settings')} aria-label="Settings">⚙<br />Settings</button></nav>
-    </main>
-  </div>;
+  return (
+    <div className={`app-shell ${railCollapsed ? "rail-collapsed" : ""}`}>
+      <aside className="rail">
+        <div className="brand">
+          <div className="brand-row">
+            <span className="brand-name">
+              <span className="logo">R</span>Rallx Kanban
+            </span>
+            <button
+              aria-label={railCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              onClick={() => setRailCollapsed((value) => !value)}
+            >
+              {railCollapsed ? "›" : "‹"}
+            </button>
+          </div>
+          <div className="tenant">
+            <b>Acme Corp</b>
+            <small className="mono">tnt_8932x_us</small>
+          </div>
+        </div>
+        <button
+          className="search"
+          type="button"
+          onClick={() =>
+            document.querySelector<HTMLInputElement>(".filter-search")?.focus()
+          }
+          aria-label="Focus ticket filter"
+        >
+          ⌕ Command / Filter <span className="mono shortcut">⌘K</span>
+        </button>
+        <nav className="nav" aria-label="Workspace navigation">
+          <div className="section-label">Workspace</div>
+          <Nav
+            active={view === "board"}
+            onClick={() => setView("board")}
+            label="▦　Board"
+            count={visible.length}
+          />
+          <Nav onClick={() => setView("board")} label="◎　My Work" count={4} />
+          <Nav
+            active={view === "backlog"}
+            onClick={() => setView("backlog")}
+            label="☷　Backlog"
+            count={visible.filter((t) => t.status === "backlog").length}
+          />
+          <Nav
+            active={view === "archive"}
+            onClick={() => setView("archive")}
+            label="▱　Archive"
+            count={archived.length}
+          />
+          <div className="section-label">Pinned projects</div>
+          {["Core Platform", "Auth Gateway", "Mobile Client"].map(
+            (project, i) => (
+              <button
+                className="nav-item"
+                key={project}
+                onClick={() => setQuery(project)}
+                aria-label={`Filter by ${project}`}
+              >
+                <span
+                  style={{
+                    color:
+                      i === 0 ? "#b4f1be" : i === 1 ? "#8d9199" : "#ffdcc1",
+                  }}
+                >
+                  ●　{project}
+                </span>
+                <small className="mono">{[84, 19, 31][i]}</small>
+              </button>
+            ),
+          )}
+        </nav>
+        <div className="rail-bottom">
+          <Nav
+            active={view === "settings"}
+            onClick={() => setView("settings")}
+            label="⚙　Settings"
+          />
+          <button
+            className="nav-item"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          >
+            ☾ Theme
+          </button>
+          <div className="profile">
+            <div className="avatar">EV</div>
+            <div>
+              <b>Elena Vance</b>
+              <div className="muted mono">Lead Architect</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <main className="workspace">
+        <header className="toolbar">
+          <div className="toolbar-top">
+            <div className="view-tabs" role="tablist" aria-label="Board views">
+              <button
+                className={view === "board" ? "active" : ""}
+                onClick={() => setView("board")}
+              >
+                ▦ Board
+              </button>
+              <button
+                className={view === "backlog" ? "active" : ""}
+                onClick={() => setView("backlog")}
+              >
+                ☷ List
+              </button>
+              <button disabled title="Analytics is not implemented">
+                ⌁ Analytics
+              </button>
+            </div>
+            <button className="primary" onClick={add}>
+              ＋ New Ticket <span className="mono">C</span>
+            </button>
+          </div>
+          <div className="toolbar-bottom">
+            <div className="chips">
+              <input
+                aria-label="Filter tickets"
+                className="filter-search"
+                placeholder="Filter tickets by name, #ID, or tag..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <button
+                className={filter === "all" ? "chip selected" : "chip"}
+                onClick={() => setFilter("all")}
+              >
+                ⚙ Filter
+              </button>
+              <button
+                className={filter === "mine" ? "chip selected" : "chip"}
+                onClick={() => setFilter("mine")}
+              >
+                My tickets
+              </button>
+              <button
+                className={filter === "urgent" ? "chip selected" : "chip"}
+                onClick={() => setFilter("urgent")}
+              >
+                Urgent
+              </button>
+            </div>
+            <div className="muted toolbar-summary">
+              Group: <b>Status</b>　•　Order: <b>Priority</b>
+            </div>
+          </div>
+        </header>
+        {view === "settings" ? (
+          <Settings theme={theme} setTheme={setTheme} />
+        ) : view === "archive" ? (
+          <Archive tickets={archived} restore={restore} remove={remove} />
+        ) : (
+          <div className="board-wrap">
+            <section className="board">
+              {columns.map((column) => (
+                <div
+                  className="column"
+                  key={column.id}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => {
+                    if (dragged) move(dragged, column.id);
+                    setDragged(null);
+                  }}
+                >
+                  <div className="column-head">
+                    <div className="column-title">
+                      <span
+                        className="dot"
+                        style={{ background: column.color }}
+                      />
+                      {column.label}
+                      <span className="count">
+                        {visible.filter((t) => t.status === column.id).length}
+                      </span>
+                      {column.limit && (
+                        <small className="muted">/ {column.limit}</small>
+                      )}
+                    </div>
+                    <button
+                      aria-label={`Add ticket to ${column.label}`}
+                      onClick={add}
+                    >
+                      ＋
+                    </button>
+                  </div>
+                  <div className="cards">
+                    {visible
+                      .filter((t) => t.status === column.id)
+                      .map((ticket) => (
+                        <Card
+                          key={ticket.id}
+                          t={ticket}
+                          selected={selected === ticket.id}
+                          dragged={dragged === ticket.id}
+                          click={() => setSelected(ticket.id)}
+                          start={() => setDragged(ticket.id)}
+                          end={() => setDragged(null)}
+                        />
+                      ))}
+                  </div>
+                </div>
+              ))}
+            </section>
+            {sel && (
+              <Inspector
+                t={sel}
+                close={() => setSelected("")}
+                comment={comment}
+                setComment={setComment}
+                comments={commentHistory[sel.id] ?? []}
+                addComment={addComment}
+                archive={() => archive(sel.id)}
+                done={() => move(sel.id, "done")}
+              />
+            )}
+          </div>
+        )}
+        <footer className="footer">
+          <span>
+            <b>{visible.length}</b> tickets　•　
+            <b>{visible.reduce((n, t) => n + t.points, 0)}</b> SP　•　
+            <span style={{ color: "#ffdcc1" }}>
+              {visible.filter((t) => t.status === "review").length}
+            </span>{" "}
+            in review
+          </span>
+          <span className="mono">
+            ✓ GitHub sync scaffold · Sprint 14: 5d remaining
+          </span>
+        </footer>
+        <nav className="mobile-nav" aria-label="Mobile navigation">
+          <button onClick={() => setView("board")} aria-label="Board">
+            ▦<br />
+            Board
+          </button>
+          <button onClick={() => setView("backlog")} aria-label="Backlog">
+            ☷<br />
+            Backlog
+          </button>
+          <button onClick={add} aria-label="New ticket">
+            ＋<br />
+            New
+          </button>
+          <button onClick={() => setView("settings")} aria-label="Settings">
+            ⚙<br />
+            Settings
+          </button>
+        </nav>
+      </main>
+    </div>
+  );
 }
 
-function Nav({ active, onClick, label, count }: { active?: boolean; onClick: () => void; label: string; count?: number }) { return <button className={active ? 'nav-item active' : 'nav-item'} onClick={onClick}><span>{label}</span>{count !== undefined && <span className="count">{count}</span>}</button>; }
-function Card({ t, selected, dragged, click, start, end }: { t: LocalTicket; selected: boolean; dragged: boolean; click: () => void; start: () => void; end: () => void }) { return <article className={`ticket ${selected ? 'selected' : ''} ${dragged ? 'dragging' : ''}`} draggable tabIndex={0} role="button" aria-label={`Open ticket ${t.id}: ${t.title}`} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); click(); } }} onDragStart={start} onDragEnd={end} onClick={click}><div className="ticket-meta"><span className="ticket-key">{t.id}</span><span className="pill">{t.points} SP</span></div><div className="ticket-title">{t.title}</div><div className="ticket-foot"><span className="tag">{t.tags[0]}</span><span className={`priority ${t.priority}`} aria-label={`${t.priority} priority`}>{t.priority === 'urgent' ? '▲' : t.priority === 'high' ? '◆' : t.priority === 'low' ? '↓' : '•'}</span><span className="avatar" aria-hidden="true" style={{ width: 22, height: 22 }}>{t.initials}</span></div></article>; }
-function Inspector({ t, close, comment, setComment, comments, addComment, archive, done }: { t: LocalTicket; close: () => void; comment: string; setComment: (value: string) => void; comments: string[]; addComment: () => void; archive: () => void; done: () => void }) { return <aside className="inspector" aria-label={`Ticket inspector for ${t.id}`}><div className="inspector-head"><div><span className="ticket-key pill">{t.id}</span> <span className="status-pill">● {t.status === 'review' ? 'In Review' : t.status}</span></div><button onClick={close} aria-label="Close ticket inspector">✕</button></div><div className="inspector-body"><h2>{t.title}</h2><div>{t.tags.map((tag) => <span className="tag" key={tag} style={{ marginRight: 5 }}>{tag}</span>)}<span className="tag urgent">{t.priority.toUpperCase()}</span></div><div className="meta-grid"><div><span>Assignee</span><b>{t.assignee}</b></div><div><span>Reporter</span><b>Marcus Brody</b></div><div><span>Estimate</span><b className="mono">{t.points} SP</b></div><div><span>Priority</span><b className="urgent">{t.priority.toUpperCase()}</b></div><div><span>Due date</span><b>{t.due || 'No date'}</b></div><div><span>Project</span><b className="mono">CORE</b></div></div>{t.pr && <div className="panel"><div className="panel-title">GitHub VCS · scaffolded</div><div className="github">Mock pull request {t.pr} · no live sync</div><div className="muted mono">Integration is not connected</div></div>}<div className="panel"><div className="panel-title">Description</div><p style={{ fontSize: 12, lineHeight: 1.6 }}>{t.description}</p><pre style={{ background: '#111417', padding: 10, borderRadius: 8, overflow: 'auto', fontSize: 10 }}><code>openssl s_client -connect edge.mesh.internal:443</code></pre><label style={{ display: 'block', fontSize: 11 }}><input type="checkbox" defaultChecked /> Generate subordinate CA bundle</label><label style={{ display: 'block', fontSize: 11 }}><input type="checkbox" /> Deploy staging handshake harness</label></div><div className="panel"><div className="panel-title">Activity & discussion · {t.comments} events</div><div className="comment"><b>Elena Vance</b> linked mock PR <span className="ticket-key">{t.pr || '#892'}</span><div className="muted">2h ago</div></div>{comments.map((text, index) => <div className="comment" key={`${text}-${index}`}><b>Elena Vance</b><p>{text}</p><div className="muted">Just now · local prototype state</div></div>)}<textarea rows={3} aria-label="Write a comment" placeholder="Write a comment... (stored locally)" value={comment} onChange={(e) => setComment(e.target.value)} /><button className="chip" onClick={addComment}>Comment</button></div></div><div className="inspector-foot"><button className="chip" onClick={archive}>Archive</button><button className="primary" onClick={done}>✓ Move to Done</button></div></aside>; }
-function Archive({ tickets, restore, remove }: { tickets: LocalTicket[]; restore: (id: string) => void; remove: (id: string) => void }) { return <section className="archive-view"><div className="section-label">Workspace</div><h1>Archive</h1>{tickets.length === 0 ? <div className="panel"><p className="muted">Archived tickets will appear here when they are retired from the delivery board.</p></div> : tickets.map((ticket) => <div className="panel archive-row" key={ticket.id}><div><b>{ticket.id}</b> <span>{ticket.title}</span></div><div><button className="chip" onClick={() => restore(ticket.id)}>Restore</button><button className="chip danger" onClick={() => remove(ticket.id)}>Delete</button></div></div>)}</section>; }
-function Settings({ theme, setTheme }: { theme: 'dark' | 'light'; setTheme: (value: 'dark' | 'light') => void }) { return <section className="settings-view"><div className="section-label">Workspace settings</div><h1>Settings</h1><div className="panel"><div className="panel-title">Appearance</div><p className="muted" style={{ fontSize: 12 }}>Choose the console theme. Your preference is stored locally.</p><button className={theme === 'dark' ? 'chip selected' : 'chip'} onClick={() => setTheme('dark')}>Dark</button> <button className={theme === 'light' ? 'chip selected' : 'chip'} onClick={() => setTheme('light')}>Light</button></div><div className="panel integrations"><div className="panel-title">Integrations · scaffolded</div><p>GitHub sync <span className="muted">Not connected (mock data only)</span></p><p>OIDC / Authentik <span className="muted">Auth scaffold; deployment configuration required</span></p><p>MCP access <span className="muted">Token model planned; service not available</span></p></div></section>; }
+function Nav({
+  active,
+  onClick,
+  label,
+  count,
+}: {
+  active?: boolean;
+  onClick: () => void;
+  label: string;
+  count?: number;
+}) {
+  return (
+    <button
+      className={active ? "nav-item active" : "nav-item"}
+      onClick={onClick}
+    >
+      <span>{label}</span>
+      {count !== undefined && <span className="count">{count}</span>}
+    </button>
+  );
+}
+function Card({
+  t,
+  selected,
+  dragged,
+  click,
+  start,
+  end,
+}: {
+  t: LocalTicket;
+  selected: boolean;
+  dragged: boolean;
+  click: () => void;
+  start: () => void;
+  end: () => void;
+}) {
+  return (
+    <article
+      className={`ticket ${selected ? "selected" : ""} ${dragged ? "dragging" : ""}`}
+      draggable
+      tabIndex={0}
+      role="button"
+      aria-label={`Open ticket ${t.id}: ${t.title}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          click();
+        }
+      }}
+      onDragStart={start}
+      onDragEnd={end}
+      onClick={click}
+    >
+      <div className="ticket-meta">
+        <span className="ticket-key">{t.id}</span>
+        <span className="pill">{t.points} SP</span>
+      </div>
+      <div className="ticket-title">{t.title}</div>
+      <div className="ticket-foot">
+        <span className="tag">{t.tags[0]}</span>
+        <span
+          className={`priority ${t.priority}`}
+          aria-label={`${t.priority} priority`}
+        >
+          {t.priority === "urgent"
+            ? "▲"
+            : t.priority === "high"
+              ? "◆"
+              : t.priority === "low"
+                ? "↓"
+                : "•"}
+        </span>
+        <span
+          className="avatar"
+          aria-hidden="true"
+          style={{ width: 22, height: 22 }}
+        >
+          {t.initials}
+        </span>
+      </div>
+    </article>
+  );
+}
+function Inspector({
+  t,
+  close,
+  comment,
+  setComment,
+  comments,
+  addComment,
+  archive,
+  done,
+}: {
+  t: LocalTicket;
+  close: () => void;
+  comment: string;
+  setComment: (value: string) => void;
+  comments: string[];
+  addComment: () => void;
+  archive: () => void;
+  done: () => void;
+}) {
+  return (
+    <aside className="inspector" aria-label={`Ticket inspector for ${t.id}`}>
+      <div className="inspector-head">
+        <div>
+          <span className="ticket-key pill">{t.id}</span>{" "}
+          <span className="status-pill">
+            ● {t.status === "review" ? "In Review" : t.status}
+          </span>
+        </div>
+        <button onClick={close} aria-label="Close ticket inspector">
+          ✕
+        </button>
+      </div>
+      <div className="inspector-body">
+        <h2>{t.title}</h2>
+        <div>
+          {t.tags.map((tag) => (
+            <span className="tag" key={tag} style={{ marginRight: 5 }}>
+              {tag}
+            </span>
+          ))}
+          <span className="tag urgent">{t.priority.toUpperCase()}</span>
+        </div>
+        <div className="meta-grid">
+          <div>
+            <span>Assignee</span>
+            <b>{t.assignee}</b>
+          </div>
+          <div>
+            <span>Reporter</span>
+            <b>Marcus Brody</b>
+          </div>
+          <div>
+            <span>Estimate</span>
+            <b className="mono">{t.points} SP</b>
+          </div>
+          <div>
+            <span>Priority</span>
+            <b className="urgent">{t.priority.toUpperCase()}</b>
+          </div>
+          <div>
+            <span>Due date</span>
+            <b>{t.due || "No date"}</b>
+          </div>
+          <div>
+            <span>Project</span>
+            <b className="mono">CORE</b>
+          </div>
+        </div>
+        {t.pr && (
+          <div className="panel">
+            <div className="panel-title">GitHub VCS · scaffolded</div>
+            <div className="github">
+              Mock pull request {t.pr} · no live sync
+            </div>
+            <div className="muted mono">Integration is not connected</div>
+          </div>
+        )}
+        <div className="panel">
+          <div className="panel-title">Description</div>
+          <p style={{ fontSize: 12, lineHeight: 1.6 }}>{t.description}</p>
+          <pre
+            style={{
+              background: "#111417",
+              padding: 10,
+              borderRadius: 8,
+              overflow: "auto",
+              fontSize: 10,
+            }}
+          >
+            <code>openssl s_client -connect edge.mesh.internal:443</code>
+          </pre>
+          <label style={{ display: "block", fontSize: 11 }}>
+            <input type="checkbox" defaultChecked /> Generate subordinate CA
+            bundle
+          </label>
+          <label style={{ display: "block", fontSize: 11 }}>
+            <input type="checkbox" /> Deploy staging handshake harness
+          </label>
+        </div>
+        <div className="panel">
+          <div className="panel-title">
+            Activity & discussion · {t.comments} events
+          </div>
+          <div className="comment">
+            <b>Elena Vance</b> linked mock PR{" "}
+            <span className="ticket-key">{t.pr || "#892"}</span>
+            <div className="muted">2h ago</div>
+          </div>
+          {comments.map((text, index) => (
+            <div className="comment" key={`${text}-${index}`}>
+              <b>Elena Vance</b>
+              <p>{text}</p>
+              <div className="muted">Just now · local prototype state</div>
+            </div>
+          ))}
+          <textarea
+            rows={3}
+            aria-label="Write a comment"
+            placeholder="Write a comment... (stored locally)"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <button className="chip" onClick={addComment}>
+            Comment
+          </button>
+        </div>
+      </div>
+      <div className="inspector-foot">
+        <button className="chip" onClick={archive}>
+          Archive
+        </button>
+        <button className="primary" onClick={done}>
+          ✓ Move to Done
+        </button>
+      </div>
+    </aside>
+  );
+}
+function Archive({
+  tickets,
+  restore,
+  remove,
+}: {
+  tickets: LocalTicket[];
+  restore: (id: string) => void;
+  remove: (id: string) => void;
+}) {
+  return (
+    <section className="archive-view">
+      <div className="section-label">Workspace</div>
+      <h1>Archive</h1>
+      {tickets.length === 0 ? (
+        <div className="panel">
+          <p className="muted">
+            Archived tickets will appear here when they are retired from the
+            delivery board.
+          </p>
+        </div>
+      ) : (
+        tickets.map((ticket) => (
+          <div className="panel archive-row" key={ticket.id}>
+            <div>
+              <b>{ticket.id}</b> <span>{ticket.title}</span>
+            </div>
+            <div>
+              <button className="chip" onClick={() => restore(ticket.id)}>
+                Restore
+              </button>
+              <button className="chip danger" onClick={() => remove(ticket.id)}>
+                Delete
+              </button>
+            </div>
+          </div>
+        ))
+      )}
+    </section>
+  );
+}
+function Settings({
+  theme,
+  setTheme,
+}: {
+  theme: "dark" | "light";
+  setTheme: (value: "dark" | "light") => void;
+}) {
+  return (
+    <section className="settings-view">
+      <div className="section-label">Workspace settings</div>
+      <h1>Settings</h1>
+      <div className="panel">
+        <div className="panel-title">Appearance</div>
+        <p className="muted" style={{ fontSize: 12 }}>
+          Choose the console theme. Your preference is stored locally.
+        </p>
+        <button
+          className={theme === "dark" ? "chip selected" : "chip"}
+          onClick={() => setTheme("dark")}
+        >
+          Dark
+        </button>{" "}
+        <button
+          className={theme === "light" ? "chip selected" : "chip"}
+          onClick={() => setTheme("light")}
+        >
+          Light
+        </button>
+      </div>
+      <div className="panel integrations">
+        <div className="panel-title">Integrations · scaffolded</div>
+        <p>
+          GitHub sync{" "}
+          <span className="muted">Not connected (mock data only)</span>
+        </p>
+        <p>
+          OIDC / Authentik{" "}
+          <span className="muted">
+            Auth scaffold; deployment configuration required
+          </span>
+        </p>
+        <p>
+          MCP access{" "}
+          <span className="muted">
+            Token model planned; service not available
+          </span>
+        </p>
+      </div>
+    </section>
+  );
+}
