@@ -1,4 +1,4 @@
-import type { LocalTicket } from "./kanban-types";
+import type { LocalTicket } from "./types";
 
 export function Inspector({
   t,

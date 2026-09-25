@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "prisma:validate": "DATABASE_URL=\"${DATABASE_URL:-postgresql://rallx:local@localhost:5432/rallx}\" prisma validate --schema prisma/schema.prisma",
-    "prisma:migrate:deploy": "prisma migrate deploy --schema prisma/schema.prisma"
+    "prisma:validate": "DATABASE_URL=\"${DATABASE_URL:-postgresql://rallx:***@localhost:5432/rallx}\" prisma validate --schema prisma",
+    "prisma:migrate:deploy": "prisma migrate deploy --schema prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",

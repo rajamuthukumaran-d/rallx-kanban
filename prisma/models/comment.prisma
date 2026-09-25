@@ -1,0 +1,21 @@
+model Comment {
+  id          String       @id @default(cuid())
+  tenantId    String
+  ticketId    String
+  authorId    String
+  parentId    String?
+  body        String
+  resolvedAt  DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ticket      Ticket      @relation(fields: [tenantId, ticketId], references: [tenantId, id], onDelete: Cascade)
+  author      User         @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  authorMember Membership  @relation("CommentAuthorMembership", fields: [tenantId, authorId], references: [tenantId, userId], onDelete: Cascade)
+  parent      Comment?     @relation("CommentReplies", fields: [tenantId, parentId], references: [tenantId, id], onDelete: Cascade)
+  replies     Comment[]    @relation("CommentReplies")
+
+  @@unique([tenantId, id])
+  @@index([tenantId, ticketId, createdAt])
+  @@index([tenantId, parentId])
+}

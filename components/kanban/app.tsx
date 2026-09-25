@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { initialTickets, type Status } from "../lib/mock-data";
-import { Archive, Settings } from "./kanban-views";
-import { Board } from "./kanban-board";
-import { Inspector } from "./kanban-inspector";
-import { MobileNav, Sidebar } from "./kanban-sidebar";
-import type { LocalTicket, Theme } from "./kanban-types";
+import { initialTickets, type Status } from "../../lib/mock-data";
+import { Archive, Settings } from "./views";
+import { Board } from "./board";
+import { Inspector } from "./inspector";
+import { MobileNav, Sidebar } from "./sidebar";
+import type { LocalTicket, Theme } from "./types";
 
 export default function KanbanApp() {
   const [tickets, setTickets] = useState<LocalTicket[]>(initialTickets);

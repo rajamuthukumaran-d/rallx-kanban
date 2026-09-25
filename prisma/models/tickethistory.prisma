@@ -1,0 +1,16 @@
+model TicketHistory {
+  id          String       @id @default(cuid())
+  tenantId    String
+  ticketId    String
+  actorId     String?
+  action      String
+  fromValue   Json?
+  toValue     Json?
+  createdAt   DateTime     @default(now())
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ticket      Ticket       @relation(fields: [tenantId, ticketId], references: [tenantId, id], onDelete: Cascade)
+  actor       User?        @relation("TicketHistoryActor", fields: [actorId], references: [id], onDelete: Restrict)
+  actorMember Membership? @relation("TicketHistoryActorMembership", fields: [tenantId, actorId], references: [tenantId, userId], onDelete: Restrict)
+
+  @@index([tenantId, ticketId, createdAt])
+}

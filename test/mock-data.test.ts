@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { columns, initialTickets } from "./mock-data";
+import { columns, initialTickets } from "../lib/mock-data";
 describe("board model", () => {
   it("has the five configured columns", () =>
     expect(columns.map((c) => c.id)).toEqual([

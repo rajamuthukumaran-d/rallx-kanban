@@ -1,5 +1,5 @@
-import { columns, type Status } from "../lib/mock-data";
-import type { LocalTicket } from "./kanban-types";
+import { columns, type Status } from "../../lib/mock-data";
+import type { LocalTicket } from "./types";
 
 function Card({
   t,

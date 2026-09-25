@@ -1,4 +1,4 @@
-import type { LocalTicket, Theme } from "./kanban-types";
+import type { LocalTicket, Theme } from "./types";
 
 export function Archive({
   tickets,
