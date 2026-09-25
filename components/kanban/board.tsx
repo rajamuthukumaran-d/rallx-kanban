@@ -1,4 +1,4 @@
-import { columns, type Status } from "../../lib/mock-data";
+import { columns, type Status } from "../../test/mock-data";
 import type { LocalTicket } from "./types";
 
 function Card({

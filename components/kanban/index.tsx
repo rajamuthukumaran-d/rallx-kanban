@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { initialTickets, type Status } from "../../lib/mock-data";
+import { initialTickets, type Status } from "../../test/mock-data";
 import { Archive, Settings } from "./views";
 import { Board } from "./board";
 import { Inspector } from "./inspector";
