@@ -1,0 +1,16 @@
+model AuditEvent {
+  id          String       @id @default(cuid())
+  tenantId    String
+  actorId     String?
+  action      String
+  resource    String
+  resourceId  String?
+  metadata    Json?
+  createdAt   DateTime     @default(now())
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  actor       User?        @relation("AuditActor", fields: [actorId], references: [id], onDelete: Restrict)
+  actorMember Membership? @relation("AuditActorMembership", fields: [tenantId, actorId], references: [tenantId, userId], onDelete: Restrict)
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, resource, resourceId])
+}

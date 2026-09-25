@@ -1,0 +1,17 @@
+model Membership {
+  id                   String          @id @default(cuid())
+  tenantId             String
+  userId               String
+  role                 String          @default("member")
+  createdAt            DateTime        @default(now())
+  tenant               Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user                 User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedTickets      Ticket[]        @relation("TicketAssignee")
+  authoredComments     Comment[]       @relation("CommentAuthorMembership")
+  auditEvents          AuditEvent[]    @relation("AuditActorMembership")
+  uploadedAttachments  Attachment[]    @relation("AttachmentUploaderMembership")
+  ticketHistory        TicketHistory[] @relation("TicketHistoryActorMembership")
+
+  @@unique([tenantId, userId])
+  @@index([userId])
+}

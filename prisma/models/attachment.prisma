@@ -1,0 +1,18 @@
+model Attachment {
+  id              String       @id @default(cuid())
+  tenantId        String
+  ticketId        String
+  uploaderId      String?
+  name            String
+  storageKey       String
+  mimeType         String
+  sizeBytes       BigInt
+  createdAt       DateTime     @default(now())
+  tenant          Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ticket          Ticket       @relation(fields: [tenantId, ticketId], references: [tenantId, id], onDelete: Cascade)
+  uploader        User?        @relation("AttachmentUploader", fields: [uploaderId], references: [id], onDelete: Restrict)
+  uploaderMember  Membership?  @relation("AttachmentUploaderMembership", fields: [tenantId, uploaderId], references: [tenantId, userId], onDelete: Restrict)
+
+  @@unique([tenantId, ticketId, storageKey])
+  @@index([tenantId, ticketId, createdAt])
+}

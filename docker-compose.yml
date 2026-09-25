@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
+      AUTH_SECRET: ${AUTH_SECRET:?set AUTH_SECRET}
+      AUTH_URL: ${AUTH_URL:-http://localhost:${APP_PORT:-3000}}
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      [
+        "sh",
+        "-c",
+        "./node_modules/.bin/prisma migrate deploy && node server.js",
+      ]
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-rallx}
+      POSTGRES_USER: ${POSTGRES_USER:-rallx}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - rallx-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  rallx-data:
