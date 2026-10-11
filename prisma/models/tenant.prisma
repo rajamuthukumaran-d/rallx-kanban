@@ -1,0 +1,19 @@
+model Tenant {
+  id                 String             @id @default(cuid())
+  name               String
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  memberships        Membership[]
+  projects           Project[]
+  integrations       Integration[]
+  mcpTokens          McpToken[]
+  identityProviders  IdentityProvider[]
+  githubSyncs        GithubSync[]
+  auditEvents        AuditEvent[]
+  tickets            Ticket[]
+  comments           Comment[]
+  attachments        Attachment[]
+  ticketHistory      TicketHistory[]
+
+  @@index([createdAt])
+}

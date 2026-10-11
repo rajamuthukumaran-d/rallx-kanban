@@ -1,0 +1,12 @@
+model User {
+  id              String       @id @default(cuid())
+  email           String       @unique
+  name            String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  memberships     Membership[]
+  comments        Comment[]    @relation("CommentAuthor")
+  auditEvents     AuditEvent[] @relation("AuditActor")
+  attachments     Attachment[] @relation("AttachmentUploader")
+  ticketHistory   TicketHistory[] @relation("TicketHistoryActor")
+}

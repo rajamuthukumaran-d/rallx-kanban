@@ -1,0 +1,15 @@
+model IdentityProvider {
+  id         String   @id @default(cuid())
+  tenantId   String
+  provider   String
+  issuer     String
+  clientId   String
+  secretRef  String?
+  enabled    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, provider])
+  @@index([tenantId, enabled])
+}

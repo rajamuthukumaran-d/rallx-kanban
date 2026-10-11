@@ -1,0 +1,1726 @@
+<!doctype html>
+<html class="dark" lang="en" style="">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_dashboard" name="shell-type" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            colors: {
+              md: {
+                bg: "#111318",
+                surface: "#111318",
+                surfaceDim: "#111318",
+                surfaceContainerLowest: "#0d0f13",
+                surfaceContainerLow: "#191c20",
+                surfaceContainer: "#1d2024",
+                surfaceContainerHigh: "#282a2f",
+                surfaceContainerHighest: "#33353a",
+                onSurface: "#e2e2e9",
+                onSurfaceVariant: "#c4c6d0",
+                outline: "#8e9099",
+                outlineVariant: "#44474f",
+                primary: "#a8c7fa",
+                onPrimary: "#062e6f",
+                primaryContainer: "#0842a0",
+                onPrimaryContainer: "#d3e3fd",
+                secondary: "#b6c7e9",
+                onSecondary: "#1f314c",
+                secondaryContainer: "#334460",
+                onSecondaryContainer: "#d7e3ff",
+                tertiary: "#98f2de",
+                error: "#ffb4ab",
+                onError: "#690005",
+                errorContainer: "#93000a",
+                onErrorContainer: "#ffdad6",
+                success: "#b4f1be",
+                onSuccess: "#003919",
+                successContainer: "#005227",
+                onSuccessContainer: "#b4f1be",
+                warning: "#ffdcc1",
+                onWarning: "#542200",
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-[#111318] text-[#e2e2e9] font-sans antialiased selection:bg-[#0842a0] selection:text-[#d3e3fd]"
+  >
+    <!-- MD3 Navigation Drawer / Sidebar -->
+    <aside
+      class="fixed left-0 top-0 h-full w-60 bg-[#191c20] border-r border-[#44474f]/30 z-50 flex flex-col justify-between select-none"
+    >
+      <div class="flex flex-col flex-1 min-h-0">
+        <!-- App Header & Tenant Selector -->
+        <div
+          class="px-4 py-3 border-b border-[#44474f]/20 flex flex-col gap-2.5"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span
+                class="font-medium text-[15px] tracking-tight text-[#e2e2e9]"
+                >Rallx Kanban</span
+              >
+            </div>
+
+            <button
+              class="w-7 h-7 rounded-full hover:bg-[#282a2f] text-[#8e9099] hover:text-[#e2e2e9] flex items-center justify-center transition-colors"
+              title="Toggle sidebar (⌘[)"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[18px]"
+                >dock_to_right</span
+              >
+            </button>
+          </div>
+          <!-- Tenant Switcher Pill (MD3 Outlined Style) -->
+          <div
+            class="p-2 rounded-xl bg-[#191c20] border border-[#44474f]/60 hover:bg-[#282a2f] flex items-center justify-between cursor-pointer transition-colors group"
+          >
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-medium text-[#e2e2e9] truncate"
+                  >Acme Corp</span
+                >
+              </div>
+              <span class="font-mono text-[11px] text-[#8e9099] truncate"
+                >tnt_8932x_us</span
+              >
+            </div>
+          </div>
+        </div>
+        <!-- MD3 Search Bar -->
+        <div class="px-3 pt-3 pb-1">
+          <div class="relative flex items-center">
+            <span
+              class="material-symbols-outlined absolute left-3 text-[#8e9099] text-lg pointer-events-none"
+              >search</span
+            >
+            <input
+              class="w-full pl-9 pr-11 py-2 rounded-full bg-[#282a2f] text-xs text-[#e2e2e9] placeholder-[#8e9099] border-0 focus:outline-none focus:ring-2 focus:ring-[#a8c7fa] transition-all"
+              placeholder="Command / Filter"
+              type="text"
+            />
+            <kbd
+              class="absolute right-2.5 font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-[#33353a] text-[#c4c6d0] border border-[#44474f]/50"
+              >⌘K</kbd
+            >
+          </div>
+        </div>
+        <!-- Navigation Items (Material Navigation Drawer pill items) -->
+        <div class="flex-1 overflow-y-auto px-3 py-2 space-y-4">
+          <nav class="flex flex-col gap-1">
+            <span
+              class="px-3 pt-1 pb-1 font-mono text-[10px] uppercase font-semibold tracking-wider text-[#8e9099]"
+              >Workspace</span
+            >
+            <!-- Selected: MD3 Pill Container -->
+            <a
+              aria-current="page"
+              class="group flex items-center justify-between px-4 py-2 rounded-full bg-[#0842a0] text-[#d3e3fd] font-medium shadow-sm transition-all"
+              data-path="board"
+              href="#"
+            >
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-[19px]"
+                  >view_kanban</span
+                >
+                <span class="text-sm font-medium">Board</span>
+              </div>
+              <span
+                class="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-[#a8c7fa] text-[#062e6f]"
+                >1</span
+              >
+            </a>
+            <!-- Inactive nav items with MD3 rounded-full hover -->
+            <a
+              class="group flex items-center justify-between px-4 py-2 rounded-full text-[#c4c6d0] hover:bg-[#33353a]/60 hover:text-[#e2e2e9] transition-colors"
+              data-path="my-work"
+              href="#"
+            >
+              <div class="flex items-center gap-3">
+                <span
+                  class="material-symbols-outlined text-[19px] text-[#8e9099] group-hover:text-[#e2e2e9]"
+                  >assignment_ind</span
+                >
+                <span class="text-sm">My Work</span>
+              </div>
+              <span
+                class="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-[#334460] text-[#d7e3ff]"
+                >4</span
+              >
+            </a>
+            <a
+              class="group flex items-center justify-between px-4 py-2 rounded-full text-[#c4c6d0] hover:bg-[#33353a]/60 hover:text-[#e2e2e9] transition-colors"
+              data-path="backlog"
+              href="#"
+            >
+              <div class="flex items-center gap-3">
+                <span
+                  class="material-symbols-outlined text-[19px] text-[#8e9099] group-hover:text-[#e2e2e9]"
+                  >list_alt</span
+                >
+                <span class="text-sm">Backlog</span>
+              </div>
+              <span
+                class="font-mono text-xs font-medium px-2 py-0.5 rounded-full bg-[#33353a] text-[#c4c6d0]"
+                >2</span
+              >
+            </a>
+            <a
+              class="group flex items-center justify-between px-4 py-2 rounded-full text-[#c4c6d0] hover:bg-[#33353a]/60 hover:text-[#e2e2e9] transition-colors"
+              data-path="archive"
+              href="#"
+            >
+              <div class="flex items-center gap-3">
+                <span
+                  class="material-symbols-outlined text-[19px] text-[#8e9099] group-hover:text-[#e2e2e9]"
+                  >archive</span
+                >
+                <span class="text-sm">Archive</span>
+              </div>
+            </a>
+          </nav>
+          <!-- Pinned Projects Group -->
+          <div class="flex flex-col gap-1 pt-2 border-t border-[#44474f]/20">
+            <div class="flex items-center justify-between px-3 pt-1 pb-1">
+              <span
+                class="font-mono text-[10px] uppercase font-semibold tracking-wider text-[#8e9099]"
+                >Pinned Projects</span
+              >
+              <button
+                class="w-5 h-5 rounded-full hover:bg-[#33353a] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9] transition-colors"
+              >
+                <span class="material-symbols-outlined text-sm">add</span>
+              </button>
+            </div>
+            <a
+              class="group flex items-center justify-between px-3 py-1.5 rounded-full text-[#c4c6d0] hover:bg-[#33353a]/50 hover:text-[#e2e2e9] transition-colors"
+              data-path="project-core-platform"
+              href="#"
+            >
+              <div class="flex items-center gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-[#b4f1be]"></span>
+                <span class="text-xs truncate font-medium">Core Platform</span>
+              </div>
+              <span class="font-mono text-[11px] text-[#8e9099]">84</span>
+            </a>
+            <a
+              class="group flex items-center justify-between px-3 py-1.5 rounded-full text-[#c4c6d0] hover:bg-[#33353a]/50 hover:text-[#e2e2e9] transition-colors"
+              data-path="project-auth-gateway"
+              href="#"
+            >
+              <div class="flex items-center gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-[#8e9099]"></span>
+                <span class="text-xs truncate font-medium">Auth Gateway</span>
+              </div>
+              <span class="font-mono text-[11px] text-[#8e9099]">19</span>
+            </a>
+            <a
+              class="group flex items-center justify-between px-3 py-1.5 rounded-full text-[#c4c6d0] hover:bg-[#33353a]/50 hover:text-[#e2e2e9] transition-colors"
+              data-path="project-mobile-client"
+              href="#"
+            >
+              <div class="flex items-center gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-[#ffdcc1]"></span>
+                <span class="text-xs truncate font-medium">Mobile Client</span>
+              </div>
+              <span class="font-mono text-[11px] text-[#8e9099]">31</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom Status & User Drawer Section -->
+      <div
+        class="p-3 border-t border-[#44474f]/20 bg-[#14171b] flex flex-col gap-2"
+      >
+        <!-- Sync Status Pill -->
+
+        <!-- User Profile & Action Controls -->
+        <div class="flex items-center justify-between pt-1">
+          <a
+            class="flex items-center gap-2 text-[#c4c6d0] hover:text-[#e2e2e9] px-2 py-1 rounded-full hover:bg-[#282a2f] transition-colors"
+            data-path="settings"
+            href="#"
+          >
+            <span class="material-symbols-outlined text-[18px]">settings</span>
+            <span class="text-xs font-medium">Settings</span>
+          </a>
+          <div class="flex items-center gap-1">
+            <button
+              class="w-8 h-8 rounded-full hover:bg-[#282a2f] text-[#c4c6d0] hover:text-[#e2e2e9] flex items-center justify-center transition-colors relative"
+              title="Notifications"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[19px]"
+                >notifications</span
+              >
+              <span
+                class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#ffb4ab] ring-2 ring-[#14171b]"
+              ></span>
+            </button>
+            <button
+              class="w-8 h-8 rounded-full hover:bg-[#282a2f] text-[#c4c6d0] hover:text-[#e2e2e9] flex items-center justify-center transition-colors"
+              title="Toggle Theme"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[19px]"
+                >dark_mode</span
+              >
+            </button>
+          </div>
+        </div>
+        <div
+          class="pt-2 border-t border-[#44474f]/20 flex items-center justify-between px-1"
+        >
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="relative flex-shrink-0">
+              <img
+                src="https://lh3.googleusercontent.com/aida/AEtjO1XTrX3uQNxmxyYCQ5-yScRI_i-h8TpJpYL-_Os_k-auqD0bhgGCUyVcgEuaW86CdPljQAXUJAVL9itYJQuydHiBPxAJjRM0qlfh_kw_WZ6ZqlAfvYAt1NejQ25TxNRJqZv1alCmKPtb48fhJXaDljix82t_RyI_EZ4jkh_WPjpJJQPA5E4XL2InRoPE0ByEyfw4rAn5xphWQP7EE5di4ybnV8sWcum-xInv7WPSU5vzZPk9LnzP2-vulg"
+                alt="Elena Vance"
+                class="w-8 h-8 rounded-full object-cover ring-1 ring-[#a8c7fa]"
+              /><span
+                class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#b4f1be] ring-2 ring-[#14171b]"
+              ></span>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <span class="text-xs font-semibold text-[#e2e2e9] truncate"
+                >Elena Vance</span
+              ><span class="font-mono text-[10px] text-[#8e9099] truncate"
+                >Lead Architect</span
+              >
+            </div>
+          </div>
+          <button
+            class="w-7 h-7 rounded-full hover:bg-[#282a2f] text-[#8e9099] hover:text-[#e2e2e9] flex items-center justify-center transition-colors flex-shrink-0"
+            title="Account menu"
+          >
+            <span class="material-symbols-outlined text-base">more_vert</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+    <!-- Main Content Wrapper -->
+    <div class="pl-60 flex flex-col min-h-screen">
+      <!-- MD3 Top App Bar -->
+
+      <!-- Main Workspace Container -->
+      <main class="relative w-full flex-1 bg-[#111318]">
+        <div
+          class="flex flex-col w-full h-[calc(100vh-3.5rem)] overflow-hidden text-[#e2e2e9] select-none h-screen"
+        >
+          <!-- MD3 Workspace Bar (Sub-header) -->
+          <div
+            class="flex-none bg-[#191c20] px-5 py-2.5 border-b border-[#44474f]/25 flex flex-col gap-2.5"
+          >
+            <!-- Top Row: Context & Action Items -->
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex items-center p-1 rounded-full bg-[#1d2024] border border-[#44474f]/40"
+                >
+                  <button
+                    class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0842a0] text-[#d3e3fd] text-xs font-medium shadow-sm"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >view_kanban</span
+                    >Board</button
+                  ><button
+                    class="flex items-center gap-1.5 px-3 py-1 rounded-full hover:bg-[#282a2f] text-[#c4c6d0] text-xs font-medium transition-colors"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >format_list_bulleted</span
+                    >List</button
+                  ><button
+                    class="flex items-center gap-1.5 px-3 py-1 rounded-full hover:bg-[#282a2f] text-[#c4c6d0] text-xs font-medium transition-colors"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >query_stats</span
+                    >Analytics</button
+                  ><button
+                    class="flex items-center gap-1.5 px-3 py-1 rounded-full hover:bg-[#282a2f] text-[#c4c6d0] text-xs font-medium transition-colors"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >timeline</span
+                    >Timeline
+                  </button>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <button
+                  class="bg-[#a8c7fa] text-[#062e6f] font-medium text-xs rounded-full px-4 py-2 shadow-sm hover:shadow-md hover:bg-[#b8d4ff] flex items-center gap-1.5 transition-all active:scale-95"
+                >
+                  <span class="material-symbols-outlined text-base">add</span
+                  ><span class="font-semibold">New Ticket</span
+                  ><kbd
+                    class="font-mono text-[10px] px-1 rounded-md bg-[#062e6f]/20 text-[#062e6f] ml-1"
+                    >C</kbd
+                  >
+                </button>
+              </div>
+            </div>
+            <!-- Bottom Row: Filter Chips & Sorting -->
+            <div class="flex items-center justify-between gap-4 pt-1">
+              <div class="flex items-center gap-3 flex-1 max-w-2xl">
+                <div class="relative w-80 flex items-center">
+                  <span
+                    class="material-symbols-outlined absolute left-3 text-[#8e9099] text-base pointer-events-none select-none"
+                    >search</span
+                  ><input
+                    class="w-full h-8 pl-9 pr-8 rounded-full bg-[#282a2f] text-xs text-[#e2e2e9] placeholder-[#8e9099] border border-[#44474f]/30 focus:outline-none focus:ring-2 focus:ring-[#a8c7fa] focus:border-transparent transition-all"
+                    placeholder="Filter tickets by name, #ID, or tag..."
+                    type="text"
+                    value=""
+                  /><kbd
+                    class="absolute right-2.5 font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-[#33353a] text-[#8e9099] pointer-events-none select-none"
+                    >/</kbd
+                  >
+                </div>
+                <button
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#334460] text-[#d7e3ff] text-xs font-medium border border-[#44474f]/50 hover:bg-[#282a2f] transition-colors"
+                >
+                  <span class="material-symbols-outlined text-sm text-[#a8c7fa]"
+                    >tune</span
+                  ><span class="">Filter (3)</span
+                  ><span
+                    class="material-symbols-outlined text-xs text-[#8e9099]"
+                    >expand_more</span
+                  >
+                </button>
+              </div>
+              <!-- Group & Order Selectors -->
+              <div class="flex items-center gap-2 text-xs text-[#8e9099]">
+                <span class=""
+                  >Group:
+                  <strong class="text-[#c4c6d0] font-medium"
+                    >Status</strong
+                  ></span
+                >
+                <span class="">•</span>
+                <span class=""
+                  >Order:
+                  <strong class="text-[#c4c6d0] font-medium"
+                    >Priority</strong
+                  ></span
+                >
+                <button
+                  class="w-7 h-7 rounded-full hover:bg-[#282a2f] text-[#8e9099] hover:text-[#e2e2e9] flex items-center justify-center transition-colors"
+                  title="Column Layout Config"
+                >
+                  <span class="material-symbols-outlined text-base"
+                    >view_column</span
+                  >
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Main Canvas Workspace (Kanban Columns + MD3 Standard Side Sheet Inspector) -->
+          <div class="flex-1 flex min-h-0 overflow-hidden relative">
+            <!-- Horizontal Kanban Track -->
+            <div
+              class="flex-1 overflow-x-auto overflow-y-hidden p-4 flex gap-3.5 min-w-0"
+              id="kanban-canvas"
+            >
+              <!-- COLUMN 1: Backlog -->
+              <div
+                class="w-72 flex-shrink-0 flex flex-col bg-[#1d2024] rounded-2xl p-2.5 min-h-0 border border-[#44474f]/30"
+              >
+                <!-- Column Header -->
+                <div class="flex items-center justify-between px-2 py-1.5 mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#8e9099]"></span>
+                    <span
+                      class="text-sm font-semibold tracking-tight text-[#e2e2e9]"
+                      >Backlog</span
+                    >
+                    <span
+                      class="font-mono text-xs px-2 py-0.5 rounded-full bg-[#33353a] text-[#c4c6d0]"
+                      >6</span
+                    >
+                  </div>
+                  <div class="flex items-center gap-0.5">
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm">add</span>
+                    </button>
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm"
+                        >more_horiz</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <!-- Cards Container -->
+                <div class="flex-1 overflow-y-auto space-y-2.5 pr-0.5">
+                  <!-- Card 1 -->
+                  <div
+                    class="bg-[#282a2f] rounded-2xl p-3.5 border border-[#44474f]/40 hover:border-[#a8c7fa]/60 hover:bg-[#2e3137] shadow-sm hover:shadow-md cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <span
+                        class="font-mono text-xs font-semibold text-[#a8c7fa]"
+                        >RLX-1055</span
+                      >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099] font-medium"
+                          >1 SP</span
+                        >
+                        <span
+                          class="material-symbols-outlined text-xs text-[#8e9099]"
+                          >low_priority</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-medium line-clamp-2 mb-3"
+                    >
+                      Upgrade Redis client to cluster topology mode with replica
+                      failover
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0]"
+                        >infra</span
+                      >
+                      <img
+                        class="w-5 h-5 rounded-full object-cover ring-1 ring-[#44474f]"
+                        data-alt="Avatar portrait"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiA1byQhcOddNWP5cmYOOr4q3SPuEPuUB3c_C_2oyxJBkamTU9YqeOS2QEN-qK80K6l_Z4O2yycomhvrZM8Au8qGph9CgQCZM2FQDwM2ZSYrm680qQ0Vt1MpqbMEg31WVCEbi6h5WeENh2ZZwffo_u8L5R9Ah6BpoMBOWlnrq13mgtP465LvqA2OR-hw1a4SbLhWDMlqWypWfzycR9osBGZpsaal4N7Ww16_yxIPTXTkdBgU4tNzLG"
+                      />
+                    </div>
+                  </div>
+                  <!-- Card 2 -->
+                  <div
+                    class="bg-[#282a2f] rounded-2xl p-3.5 border border-[#44474f]/40 hover:border-[#a8c7fa]/60 hover:bg-[#2e3137] shadow-sm hover:shadow-md cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <span
+                        class="font-mono text-xs font-semibold text-[#a8c7fa]"
+                        >RLX-1051</span
+                      >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099] font-medium"
+                          >3 SP</span
+                        >
+                        <span
+                          class="material-symbols-outlined text-xs text-[#ffdcc1]"
+                          >drag_handle</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-medium line-clamp-2 mb-3"
+                    >
+                      Refactor gRPC interceptor chain to isolate telemetry
+                      latency impact
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0]"
+                        >refactor</span
+                      >
+                      <div
+                        class="w-5 h-5 rounded-full bg-[#33353a] flex items-center justify-center font-mono text-[10px] text-[#c4c6d0] font-bold"
+                      >
+                        JD
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Card 3 -->
+                  <div
+                    class="bg-[#282a2f] rounded-2xl p-3.5 border border-[#44474f]/40 hover:border-[#a8c7fa]/60 hover:bg-[#2e3137] shadow-sm hover:shadow-md cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <span
+                        class="font-mono text-xs font-semibold text-[#a8c7fa]"
+                        >RLX-1048</span
+                      >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099] font-medium"
+                          >2 SP</span
+                        >
+                        <span
+                          class="material-symbols-outlined text-xs text-[#8e9099]"
+                          >arrow_downward</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-medium line-clamp-2 mb-3"
+                    >
+                      Deprecate legacy session tokens in favor of short-lived
+                      JWT grant tokens
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0]"
+                        >auth</span
+                      >
+                      <img
+                        class="w-5 h-5 rounded-full object-cover ring-1 ring-[#44474f]"
+                        data-alt="Avatar portrait"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHw1TnoIdE0iQ4X7hRBG6DU_30sDmg2hdZC70BJBcvs9RE_m_C_axS_MJn_e6SJaMX3eE6ie6ctt0j_OdL-xxQcqzEulgOmI50IMlxYvA_HLOteIYf8VTdjzH41NqRH-ItThW-QO3_3RlJ4zMvaCOTUG_EzHbWui524JiJwkDuzTLz-zAeP2uHLxvLbdo1y_Em9SAzZVdO67HM-GGsd4hghMEE0F5OPhceVzMvmCtKCJWUE6ZxguCq"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- COLUMN 2: Todo -->
+              <div
+                class="w-72 flex-shrink-0 flex flex-col bg-[#1d2024] rounded-2xl p-2.5 min-h-0 border border-[#44474f]/30"
+              >
+                <!-- Column Header -->
+                <div class="flex items-center justify-between px-2 py-1.5 mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#a8c7fa]"></span>
+                    <span
+                      class="text-sm font-semibold tracking-tight text-[#e2e2e9]"
+                      >Todo</span
+                    >
+                    <span
+                      class="font-mono text-xs px-2 py-0.5 rounded-full bg-[#33353a] text-[#c4c6d0]"
+                      >5</span
+                    >
+                    <span class="text-xs text-[#8e9099]">/ 8</span>
+                  </div>
+                  <div class="flex items-center gap-0.5">
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm">add</span>
+                    </button>
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm"
+                        >more_horiz</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <!-- Cards Container -->
+                <div class="flex-1 overflow-y-auto space-y-2.5 pr-0.5">
+                  <!-- Card Todo 1 -->
+                  <div
+                    class="bg-[#282a2f] rounded-2xl p-3.5 border border-[#44474f]/40 hover:border-[#a8c7fa]/60 hover:bg-[#2e3137] shadow-sm hover:shadow-md cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <span
+                        class="font-mono text-xs font-semibold text-[#a8c7fa]"
+                        >RLX-1046</span
+                      >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099] font-medium"
+                          >5 SP</span
+                        >
+                        <span
+                          class="material-symbols-outlined text-xs text-[#ffb4ab]"
+                          >priority_high</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-medium line-clamp-2 mb-3"
+                    >
+                      Configure distributed trace propagation across
+                      multi-region edge gateways
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0]"
+                        >observability</span
+                      >
+                      <div
+                        class="flex items-center gap-1 text-[#8e9099] text-[11px]"
+                      >
+                        <span class="material-symbols-outlined text-xs"
+                          >calendar_today</span
+                        >
+                        <span class="">Oct 27</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Card Todo 2 -->
+                  <div
+                    class="bg-[#282a2f] rounded-2xl p-3.5 border border-[#44474f]/40 hover:border-[#a8c7fa]/60 hover:bg-[#2e3137] shadow-sm hover:shadow-md cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <span
+                        class="font-mono text-xs font-semibold text-[#a8c7fa]"
+                        >RLX-1045</span
+                      >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099] font-medium"
+                          >3 SP</span
+                        >
+                        <span
+                          class="material-symbols-outlined text-xs text-[#ffdcc1]"
+                          >drag_handle</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-medium line-clamp-2 mb-3"
+                    >
+                      Automate key rotation schedule for KMS envelope encryption
+                      master keys
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0]"
+                        >security</span
+                      >
+                      <img
+                        class="w-5 h-5 rounded-full object-cover ring-1 ring-[#44474f]"
+                        data-alt="Female developer avatar"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxqjtNipvsWxHjjJoqZE0u0ELyFCVkFwJzH8FsWV268gpuZm4Yju4Sj_5gd99oDyEx400krH3FMmp4ZYsc4XJ8I7ZH3P92A3_nvXjTJq2SxQaUmniknSj9Ty0wLemzYV2z85W5cGVGMFlOtFumoqrAbEHIO14Zl4c09IudX8IsgxssCqBtrSor3PmEBtSRwoEh98fqz3n6J_UFwrWtz3-EaccK-Ia6WNGHl0DtFDo4Ht07s0TBUdFy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- COLUMN 3: In Progress -->
+              <div
+                class="w-72 flex-shrink-0 flex flex-col bg-[#1d2024] rounded-2xl p-2.5 min-h-0 border border-[#44474f]/30"
+              >
+                <!-- Column Header -->
+                <div class="flex items-center justify-between px-2 py-1.5 mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#ffdcc1]"></span>
+                    <span
+                      class="text-sm font-semibold tracking-tight text-[#e2e2e9]"
+                      >In Progress</span
+                    >
+                    <span
+                      class="font-mono text-xs px-2 py-0.5 rounded-full bg-[#33353a] text-[#c4c6d0]"
+                      >4</span
+                    >
+                    <span class="text-xs text-[#8e9099]">/ 5</span>
+                  </div>
+                  <div class="flex items-center gap-0.5">
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm">add</span>
+                    </button>
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm"
+                        >more_horiz</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <!-- Cards Container -->
+                <div class="flex-1 overflow-y-auto space-y-2.5 pr-0.5">
+                  <!-- Card In Progress 1 -->
+                  <div
+                    class="bg-[#282a2f] rounded-2xl p-3.5 border border-[#44474f]/40 hover:border-[#a8c7fa]/60 hover:bg-[#2e3137] shadow-sm hover:shadow-md cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <span
+                        class="font-mono text-xs font-semibold text-[#a8c7fa]"
+                        >RLX-1044</span
+                      >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099] font-medium"
+                          >8 SP</span
+                        >
+                        <span
+                          class="material-symbols-outlined text-xs text-[#ffb4ab]"
+                          >priority_high</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-medium line-clamp-2 mb-2"
+                    >
+                      Patch zero-copy memory buffer leak in socket ingest
+                      pooling worker
+                    </p>
+                    <!-- MD3 Linear Progress Bar -->
+                    <div
+                      class="w-full bg-[#1d2024] h-1.5 rounded-full overflow-hidden mb-2.5"
+                    >
+                      <div class="bg-[#a8c7fa] h-full rounded-full w-3/4"></div>
+                    </div>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#a8c7fa] flex items-center gap-1 font-medium"
+                      >
+                        <span class="material-symbols-outlined text-[11px]"
+                          >commit</span
+                        >
+                        #412 Draft
+                      </span>
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#0842a0]/40 text-[#d3e3fd]"
+                          >AI-Sync</span
+                        >
+                        <div
+                          class="w-5 h-5 rounded-full bg-[#334460] text-[#d7e3ff] flex items-center justify-center font-mono text-[10px] font-bold"
+                        >
+                          MB
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Card In Progress 2 -->
+                  <div
+                    class="bg-[#282a2f] rounded-2xl p-3.5 border border-[#44474f]/40 hover:border-[#a8c7fa]/60 hover:bg-[#2e3137] shadow-sm hover:shadow-md cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <span
+                        class="font-mono text-xs font-semibold text-[#a8c7fa]"
+                        >RLX-1043</span
+                      >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099] font-medium"
+                          >2 SP</span
+                        >
+                        <span
+                          class="material-symbols-outlined text-xs text-[#8e9099]"
+                          >low_priority</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-medium line-clamp-2 mb-3"
+                    >
+                      Update OpenTelemetry protobuf schemas to spec version
+                      v1.29
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0]"
+                        >telemetry</span
+                      >
+                      <div
+                        class="w-5 h-5 rounded-full bg-[#334460] text-[#d7e3ff] flex items-center justify-center font-mono text-[10px] font-bold"
+                      >
+                        SK
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- COLUMN 4: In Review (Selected Ticket & Drag Ghost) -->
+              <div
+                class="w-80 flex-shrink-0 flex flex-col bg-[#1d2024] rounded-2xl p-2.5 min-h-0 border border-[#44474f]/30"
+              >
+                <!-- Column Header -->
+                <div class="flex items-center justify-between px-2 py-1.5 mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#a8c7fa]"></span>
+                    <span
+                      class="text-sm font-semibold tracking-tight text-[#e2e2e9]"
+                      >In Review</span
+                    >
+                    <span
+                      class="font-mono text-xs px-2 py-0.5 rounded-full bg-[#33353a] text-[#c4c6d0]"
+                      >3</span
+                    >
+                    <span class="text-xs text-[#8e9099]">/ 4</span>
+                  </div>
+                  <div class="flex items-center gap-0.5">
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm">add</span>
+                    </button>
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm"
+                        >more_horiz</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-2.5 pr-0.5">
+                  <!-- ACTIVE / SELECTED CARD: RLX-1042 (MD3 Elevated Card with Selected State) -->
+                  <div
+                    class="relative bg-[#282a2f] rounded-2xl p-3.5 border-2 border-[#a8c7fa] shadow-lg cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-2"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono text-xs font-bold text-[#a8c7fa]"
+                          >RLX-1042</span
+                        >
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#ffdad6] text-[#410002] font-bold"
+                          >URGENT</span
+                        >
+                      </div>
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#e2e2e9] font-semibold"
+                          >5 SP</span
+                        >
+                        <kbd
+                          class="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-[#0842a0] text-[#d3e3fd]"
+                          >ESC</kbd
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-semibold line-clamp-2 mb-2.5"
+                    >
+                      Implement mTLS gateway termination for gRPC services
+                    </p>
+                    <!-- MD3 Tag Badges -->
+                    <div class="flex items-center gap-1.5 flex-wrap mb-3">
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0]"
+                        >security</span
+                      >
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#93000a]/40 text-[#ffb4ab] flex items-center gap-1"
+                      >
+                        <span class="material-symbols-outlined text-[11px]"
+                          >timer</span
+                        >
+                        Today
+                      </span>
+                      <span
+                        class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#005227]/40 text-[#b4f1be] flex items-center gap-1"
+                      >
+                        <span class="material-symbols-outlined text-[11px]"
+                          >auto_awesome</span
+                        >
+                        AI: Schema verified
+                      </span>
+                    </div>
+                    <!-- Bottom PR Row & Elena Vance avatar -->
+                    <div
+                      class="flex items-center justify-between pt-2 border-t border-[#44474f]/30"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="font-mono text-[10px] text-[#b4f1be] flex items-center gap-1 bg-[#1d2024] px-2 py-0.5 rounded-full border border-[#44474f]/30"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 rounded-full bg-[#b4f1be]"
+                          ></span>
+                          PR #892 (4/4)
+                        </span>
+                        <span
+                          class="material-symbols-outlined text-xs text-[#8e9099]"
+                          >attachment</span
+                        >
+                        <span class="font-mono text-[10px] text-[#8e9099]"
+                          >2</span
+                        >
+                      </div>
+                      <img
+                        class="w-6 h-6 rounded-full object-cover ring-2 ring-[#a8c7fa]"
+                        data-alt="Elena Vance"
+                        src="https://lh3.googleusercontent.com/aida/AEtjO1XTrX3uQNxmxyYCQ5-yScRI_i-h8TpJpYL-_Os_k-auqD0bhgGCUyVcgEuaW86CdPljQAXUJAVL9itYJQuydHiBPxAJjRM0qlfh_kw_WZ6ZqlAfvYAt1NejQ25TxNRJqZv1alCmKPtb48fhJXaDljix82t_RyI_EZ4jkh_WPjpJJQPA5E4XL2InRoPE0ByEyfw4rAn5xphWQP7EE5di4ybnV8sWcum-xInv7WPSU5vzZPk9LnzP2-vulg"
+                      />
+                    </div>
+                  </div>
+                  <!-- Ghost / Dragging simulation state placeholder -->
+                  <div
+                    class="opacity-40 bg-[#33353a] rounded-2xl p-3.5 border-2 border-dashed border-[#a8c7fa]"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1"
+                    >
+                      <span class="font-mono text-xs text-[#a8c7fa]"
+                        >RLX-1039</span
+                      >
+                      <span
+                        class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099]"
+                        >2 SP</span
+                      >
+                    </div>
+                    <p class="text-xs text-[#e2e2e9] line-clamp-1 font-medium">
+                      Zero-downtime drain for AWS NLB targets
+                    </p>
+                    <div
+                      class="text-right pt-1 font-mono text-[10px] text-[#a8c7fa]"
+                    >
+                      Moving to In Review...
+                    </div>
+                  </div>
+                  <!-- Card In Review 2 -->
+                  <div
+                    class="bg-[#282a2f] rounded-2xl p-3.5 border border-[#44474f]/40 hover:border-[#a8c7fa]/60 hover:bg-[#2e3137] shadow-sm hover:shadow-md cursor-pointer transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <span
+                        class="font-mono text-xs font-semibold text-[#a8c7fa]"
+                        >RLX-1037</span
+                      >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099] font-medium"
+                          >3 SP</span
+                        >
+                        <span
+                          class="material-symbols-outlined text-xs text-[#b4f1be]"
+                          >check_circle</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="text-xs text-[#e2e2e9] font-medium line-clamp-2 mb-3"
+                    >
+                      Automate PostgreSQL read replica autoscaling based on WAL
+                      replay lag
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="font-mono text-[10px] text-[#c4c6d0] flex items-center gap-1"
+                      >
+                        <span
+                          class="w-1.5 h-1.5 rounded-full bg-[#b4f1be]"
+                        ></span>
+                        PR #889 (Clean)
+                      </span>
+                      <div
+                        class="w-5 h-5 rounded-full bg-[#33353a] flex items-center justify-center font-mono text-[10px] text-[#c4c6d0] font-bold"
+                      >
+                        AL
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- COLUMN 5: Done -->
+              <div
+                class="w-72 flex-shrink-0 flex flex-col bg-[#1d2024] rounded-2xl p-2.5 min-h-0 opacity-85 hover:opacity-100 transition-opacity border border-[#44474f]/30"
+              >
+                <!-- Column Header -->
+                <div class="flex items-center justify-between px-2 py-1.5 mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#b4f1be]"></span>
+                    <span
+                      class="text-sm font-semibold tracking-tight text-[#e2e2e9]"
+                      >Done</span
+                    >
+                    <span
+                      class="font-mono text-xs px-2 py-0.5 rounded-full bg-[#33353a] text-[#c4c6d0]"
+                      >10</span
+                    >
+                  </div>
+                  <div class="flex items-center gap-0.5">
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm"
+                        >archive</span
+                      >
+                    </button>
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#282a2f] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9]"
+                    >
+                      <span class="material-symbols-outlined text-sm"
+                        >more_horiz</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-2.5 pr-0.5">
+                  <!-- Card Done 1 -->
+                  <div
+                    class="bg-[#282a2f]/70 rounded-2xl p-3.5 border border-[#44474f]/30 hover:bg-[#282a2f] shadow-sm transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="material-symbols-outlined text-xs text-[#b4f1be]"
+                          >check_circle</span
+                        >
+                        <span
+                          class="font-mono text-xs text-[#8e9099] line-through"
+                          >RLX-1033</span
+                        >
+                      </div>
+                      <span
+                        class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099]"
+                        >3 SP</span
+                      >
+                    </div>
+                    <p
+                      class="text-xs text-[#8e9099] line-clamp-1 mb-2.5 line-through"
+                    >
+                      Roll out OpenTelemetry trace agent to staging cluster
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="font-mono text-[10px] text-[#8e9099] flex items-center gap-1"
+                      >
+                        <span class="material-symbols-outlined text-xs"
+                          >call_merge</span
+                        >
+                        PR #884 Merged
+                      </span>
+                      <img
+                        class="w-5 h-5 rounded-full object-cover opacity-70"
+                        data-alt="Profile"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDARnBkAoN9-T-xZD95apAiNmjkerR2kzUq051wI9xOnrRfs2BKu9BHqtSWW9_gjKiuXIE7ho0in8H75DlZoqBJVF-sHhzhws4FqWycNFlHOhlAjLf4WNbdYeCyFwEEbQYJnPlhBf7ZrqBKn5v5c4EJ8hVVIwti2rrMO-Y9Z_RTyF9KA7RxVN_iXidD-zHZ1PZZV5Lfg6IGlttelhZilab7y6E3ymVUyeXE8U5XhR4Z4O1mjZSvcY6V"
+                      />
+                    </div>
+                  </div>
+                  <!-- Card Done 2 -->
+                  <div
+                    class="bg-[#282a2f]/70 rounded-2xl p-3.5 border border-[#44474f]/30 hover:bg-[#282a2f] shadow-sm transition-all"
+                  >
+                    <div
+                      class="flex items-center justify-between text-[#8e9099] mb-1.5"
+                    >
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="material-symbols-outlined text-xs text-[#b4f1be]"
+                          >check_circle</span
+                        >
+                        <span
+                          class="font-mono text-xs text-[#8e9099] line-through"
+                          >RLX-1030</span
+                        >
+                      </div>
+                      <span
+                        class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#8e9099]"
+                        >1 SP</span
+                      >
+                    </div>
+                    <p
+                      class="text-xs text-[#8e9099] line-clamp-1 mb-2.5 line-through"
+                    >
+                      Increase ingress buffer queue timeout to 4500ms
+                    </p>
+                    <div class="flex items-center justify-between pt-1">
+                      <span
+                        class="font-mono text-[10px] text-[#8e9099] flex items-center gap-1"
+                      >
+                        <span class="material-symbols-outlined text-xs"
+                          >call_merge</span
+                        >
+                        PR #881 Merged
+                      </span>
+                      <div
+                        class="w-5 h-5 rounded-full bg-[#33353a] flex items-center justify-center font-mono text-[10px] text-[#8e9099]"
+                      >
+                        EV
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- MD3 STANDARD SIDE SHEET (Ticket Inspector Console) -->
+            <aside
+              class="w-[430px] flex-shrink-0 bg-[#1d2024] border-l border-[#44474f]/40 rounded-l-3xl flex flex-col h-full z-30 shadow-2xl overflow-hidden"
+              id="ticket-inspector"
+            >
+              <!-- Side Sheet Header Bar -->
+              <div
+                class="flex-none px-5 py-3.5 bg-[#282a2f] border-b border-[#44474f]/30 flex items-center justify-between"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="font-mono text-xs font-bold text-[#d3e3fd] px-2.5 py-1 rounded-lg bg-[#0842a0]"
+                    >RLX-1042</span
+                  >
+                  <!-- Status dropdown pill -->
+                  <button
+                    class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#004a77] text-[#c2e7ff] text-xs font-medium hover:bg-[#005a91] transition-colors"
+                  >
+                    <span class="w-2 h-2 rounded-full bg-[#b4f1be]"></span>
+                    In Review
+                    <span class="material-symbols-outlined text-xs"
+                      >expand_more</span
+                    >
+                  </button>
+                  <!-- Urgent chip -->
+                </div>
+                <!-- Top Sheet Actions -->
+                <div class="flex items-center gap-1">
+                  <button
+                    class="w-8 h-8 rounded-full hover:bg-[#33353a] text-[#8e9099] hover:text-[#e2e2e9] flex items-center justify-center transition-colors"
+                    title="Copy Ticket Link"
+                  >
+                    <span class="material-symbols-outlined text-base"
+                      >share</span
+                    >
+                  </button>
+                  <button
+                    class="w-8 h-8 rounded-full hover:bg-[#33353a] text-[#8e9099] hover:text-[#e2e2e9] flex items-center justify-center transition-colors"
+                    title="Archive Ticket"
+                  >
+                    <span class="material-symbols-outlined text-base"
+                      >archive</span
+                    >
+                  </button>
+                  <button
+                    class="w-8 h-8 rounded-full hover:bg-[#33353a] text-[#8e9099] hover:text-[#e2e2e9] flex items-center justify-center transition-colors"
+                  >
+                    <span class="material-symbols-outlined text-base"
+                      >more_vert</span
+                    >
+                  </button>
+                  <button
+                    class="flex items-center gap-1 px-2.5 py-1 rounded-full hover:bg-[#33353a] text-[#8e9099] hover:text-[#e2e2e9] transition-colors"
+                    title="Close Panel (Esc)"
+                  >
+                    <span class="material-symbols-outlined text-base"
+                      >close</span
+                    >
+                    <kbd
+                      class="font-mono text-[10px] px-1 rounded bg-[#33353a] text-[#8e9099]"
+                      >Esc</kbd
+                    >
+                  </button>
+                </div>
+              </div>
+              <!-- Side Sheet Body -->
+              <div class="flex-1 overflow-y-auto p-5 space-y-4">
+                <!-- Title -->
+                <div>
+                  <h2
+                    class="text-base text-[#e2e2e9] font-semibold tracking-tight leading-snug cursor-text hover:bg-[#282a2f] p-1.5 -ml-1.5 rounded-xl transition-colors"
+                  >
+                    Implement mTLS gateway termination for gRPC services
+                  </h2>
+                </div>
+                <div class="flex items-center gap-1.5 flex-wrap -mt-1">
+                  <span class="text-[11px] text-[#8e9099] font-medium mr-1"
+                    >Tags:</span
+                  ><span
+                    class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0] border border-[#44474f]/30"
+                    >security</span
+                  ><span
+                    class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-[#1d2024] text-[#c4c6d0] border border-[#44474f]/30"
+                    >gateway</span
+                  ><span
+                    class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-[#ffdad6] text-[#410002] font-bold"
+                    >infra-p0</span
+                  ><button
+                    class="w-5 h-5 rounded-full hover:bg-[#33353a] flex items-center justify-center text-[#8e9099] hover:text-[#e2e2e9] transition-colors"
+                  >
+                    <span class="material-symbols-outlined text-xs">add</span>
+                  </button>
+                </div>
+                <!-- Key-Value Metadata Grid (MD3 Surface Container High Card) -->
+                <div
+                  class="grid grid-cols-2 gap-x-4 gap-y-2.5 p-3.5 rounded-2xl bg-[#282a2f] border border-[#44474f]/30 text-xs"
+                >
+                  <!-- Assignee -->
+                  <div class="flex items-center justify-between py-0.5">
+                    <span class="text-[11px] text-[#8e9099]">Assignee</span>
+                    <div class="flex items-center gap-1.5">
+                      <img
+                        class="w-5 h-5 rounded-full object-cover ring-1 ring-[#a8c7fa]"
+                        data-alt="Elena Vance"
+                        src="https://lh3.googleusercontent.com/aida/AEtjO1XTrX3uQNxmxyYCQ5-yScRI_i-h8TpJpYL-_Os_k-auqD0bhgGCUyVcgEuaW86CdPljQAXUJAVL9itYJQuydHiBPxAJjRM0qlfh_kw_WZ6ZqlAfvYAt1NejQ25TxNRJqZv1alCmKPtb48fhJXaDljix82t_RyI_EZ4jkh_WPjpJJQPA5E4XL2InRoPE0ByEyfw4rAn5xphWQP7EE5di4ybnV8sWcum-xInv7WPSU5vzZPk9LnzP2-vulg"
+                      />
+                      <span class="font-medium text-[#e2e2e9]"
+                        >Elena Vance</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Reporter -->
+                  <div class="flex items-center justify-between py-0.5">
+                    <span class="text-[11px] text-[#8e9099]">Reporter</span>
+                    <span class="font-medium text-[#e2e2e9]">Marcus Brody</span>
+                  </div>
+                  <!-- Sprint -->
+                  <div class="flex items-center justify-between py-0.5">
+                    <span class="text-[11px] text-[#8e9099]">Sprint</span>
+                    <span
+                      class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#e2e2e9] font-medium"
+                      >Sprint 14</span
+                    >
+                  </div>
+                  <!-- Estimate -->
+                  <div class="flex items-center justify-between py-0.5">
+                    <span class="text-[11px] text-[#8e9099]">Estimate</span>
+                    <span class="font-mono text-xs text-[#a8c7fa] font-semibold"
+                      >5 SP (8 hrs)</span
+                    >
+                  </div>
+                  <!-- Due Date -->
+                  <div class="flex items-center justify-between py-0.5">
+                    <span class="text-[11px] text-[#8e9099]">Due Date</span>
+                    <span
+                      class="text-[11px] text-[#ffb4ab] font-medium flex items-center gap-1"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 rounded-full bg-[#ffb4ab]"
+                      ></span>
+                      Oct 24 (Today)
+                    </span>
+                  </div>
+                  <!-- Priority -->
+                  <div class="flex items-center justify-between py-0.5">
+                    <span class="text-[11px] text-[#8e9099]">Priority</span>
+                    <span class="text-[11px] text-[#ffb4ab] font-semibold"
+                      >P0 - Blocking</span
+                    >
+                  </div>
+                  <!-- Tags (full width) -->
+                </div>
+                <!-- GitHub VCS Live Sync Card (MD3 Outlined Card) -->
+                <div
+                  class="rounded-2xl p-3.5 bg-[#282a2f] border border-[#44474f]/50 flex flex-col gap-2"
+                >
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-sm text-[#a8c7fa]"
+                        >call_merge</span
+                      >
+                      <span class="font-mono text-xs font-bold text-[#e2e2e9]"
+                        >PR #892</span
+                      >
+                    </div>
+                    <button
+                      class="w-6 h-6 rounded-full hover:bg-[#33353a] text-[#8e9099] hover:text-[#e2e2e9] flex items-center justify-center transition-colors"
+                      title="Force Sync VCS Checks"
+                    >
+                      <span class="material-symbols-outlined text-xs"
+                        >refresh</span
+                      >
+                    </button>
+                  </div>
+                  <div class="text-xs text-[#c4c6d0] truncate font-medium">
+                    feat(gateway): add mTLS cert validation &amp; CRL cache
+                  </div>
+                  <div
+                    class="flex items-center justify-between pt-2 border-t border-[#44474f]/30 text-xs"
+                  >
+                    <span
+                      class="text-[#b4f1be] flex items-center gap-1 text-[11px] font-medium"
+                    >
+                      <span class="material-symbols-outlined text-xs"
+                        >verified</span
+                      >
+                      Checks Passed (4/4)
+                    </span>
+                    <span class="text-[#8e9099] font-mono text-[10px]"
+                      >branch: feat/grpc-mtls</span
+                    >
+                  </div>
+                </div>
+                <!-- AI Utilitarian Verification Callout (MD3 Filled Container) -->
+                <div
+                  class="rounded-2xl p-3.5 bg-[#0842a0]/25 border border-[#a8c7fa]/30 flex flex-col gap-1.5"
+                >
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5 text-[#a8c7fa]">
+                      <span class="material-symbols-outlined text-sm"
+                        >auto_awesome</span
+                      >
+                      <span
+                        class="font-mono text-[10px] uppercase font-bold tracking-wider"
+                        >AI Pipeline Analysis</span
+                      >
+                    </div>
+                    <span class="font-mono text-[10px] text-[#c4c6d0]"
+                      >OpenSSL 3.0.12</span
+                    >
+                  </div>
+                  <p class="text-xs text-[#e2e2e9] leading-relaxed">
+                    Automated verification of cipher suites complete. No weak
+                    ciphers detected. Verified backward compatibility with Envoy
+                    proxy 1.28 and upstream cluster TLS certs.
+                  </p>
+                </div>
+                <!-- Attachments Section -->
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center justify-between">
+                    <span
+                      class="font-mono text-[10px] uppercase font-bold tracking-wider text-[#8e9099]"
+                      >Attachments (2)</span
+                    >
+                    <button
+                      class="text-xs text-[#a8c7fa] hover:underline flex items-center gap-1 font-medium"
+                    >
+                      <span class="material-symbols-outlined text-xs"
+                        >upload_file</span
+                      >
+                      Upload
+                    </button>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div
+                      class="flex items-center gap-2 p-2 rounded-xl bg-[#282a2f] hover:bg-[#33353a] border border-[#44474f]/30 transition-colors cursor-pointer group"
+                    >
+                      <span
+                        class="material-symbols-outlined text-base text-[#ffdcc1]"
+                        >image</span
+                      >
+                      <div class="flex flex-col min-w-0">
+                        <span
+                          class="text-[11px] font-medium text-[#e2e2e9] truncate group-hover:text-[#a8c7fa]"
+                          >cert-topology.png</span
+                        >
+                        <span class="font-mono text-[10px] text-[#8e9099]"
+                          >142 KB</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="flex items-center gap-2 p-2 rounded-xl bg-[#282a2f] hover:bg-[#33353a] border border-[#44474f]/30 transition-colors cursor-pointer group"
+                    >
+                      <span
+                        class="material-symbols-outlined text-base text-[#b4f1be]"
+                        >code_blocks</span
+                      >
+                      <div class="flex flex-col min-w-0">
+                        <span
+                          class="text-[11px] font-medium text-[#e2e2e9] truncate group-hover:text-[#a8c7fa]"
+                          >schema.proto</span
+                        >
+                        <span class="font-mono text-[10px] text-[#8e9099]"
+                          >18.4 KB</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Technical Description Area -->
+                <div class="flex flex-col gap-2">
+                  <span
+                    class="font-mono text-[10px] uppercase font-bold tracking-wider text-[#8e9099]"
+                    >Description</span
+                  >
+                  <div
+                    class="p-3.5 rounded-2xl bg-[#282a2f] border border-[#44474f]/30 space-y-2.5 text-xs text-[#e2e2e9] leading-relaxed"
+                  >
+                    <p class="">
+                      Implement mutual TLS authentication across public edge
+                      ingest gateways. Inbound traffic requires valid x509
+                      client certificate validated against company root CA.
+                    </p>
+                    <!-- MD3 Code snippet block -->
+                    <div
+                      class="bg-[#111318] p-2.5 rounded-xl font-mono text-[11px] text-[#c4c6d0] border border-[#44474f]/30 overflow-x-auto"
+                    >
+                      <code
+                        >openssl s_client -connect edge.mesh.internal:443 -cert
+                        client.crt -key client.key</code
+                      >
+                    </div>
+                    <!-- MD3 Checkbox Checklist -->
+                    <div class="space-y-1.5 pt-1">
+                      <div class="flex items-center gap-2.5">
+                        <input
+                          checked=""
+                          class="w-4 h-4 rounded bg-[#33353a] border-[#44474f] text-[#a8c7fa] focus:ring-0 focus:ring-offset-0"
+                          type="checkbox"
+                        />
+                        <span class="line-through text-[#8e9099] text-xs"
+                          >Generate subordinate CA intermediate bundle</span
+                        >
+                      </div>
+                      <div class="flex items-center gap-2.5">
+                        <input
+                          checked=""
+                          class="w-4 h-4 rounded bg-[#33353a] border-[#44474f] text-[#a8c7fa] focus:ring-0 focus:ring-offset-0"
+                          type="checkbox"
+                        />
+                        <span class="line-through text-[#8e9099] text-xs"
+                          >Inject SPIFFE ID extractor into ingress filter</span
+                        >
+                      </div>
+                      <div class="flex items-center gap-2.5">
+                        <input
+                          checked=""
+                          class="w-4 h-4 rounded bg-[#33353a] border-[#44474f] text-[#a8c7fa] focus:ring-0 focus:ring-offset-0"
+                          type="checkbox"
+                        />
+                        <span class="line-through text-[#8e9099] text-xs"
+                          >Update Envoy config with cert-manager webhook</span
+                        >
+                      </div>
+                      <div class="flex items-center gap-2.5">
+                        <input
+                          class="w-4 h-4 rounded bg-[#33353a] border-[#44474f] text-[#a8c7fa] focus:ring-0 focus:ring-offset-0"
+                          type="checkbox"
+                        />
+                        <span class="text-[#e2e2e9] text-xs font-medium"
+                          >Deploy load testing harness with 10k active mTLS
+                          handshakes</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Activity Timeline & Comment Stream -->
+                <div
+                  class="flex flex-col gap-3 pt-2 border-t border-[#44474f]/30"
+                >
+                  <div class="flex items-center justify-between">
+                    <span
+                      class="font-mono text-[10px] uppercase font-bold tracking-wider text-[#8e9099]"
+                      >Activity &amp; Discussion</span
+                    >
+                    <span class="font-mono text-[10px] text-[#8e9099]"
+                      >3 events</span
+                    >
+                  </div>
+                  <!-- Event 1 -->
+                  <div class="flex items-start gap-2 text-xs">
+                    <span
+                      class="material-symbols-outlined text-sm text-[#b4f1be] mt-0.5"
+                      >merge_type</span
+                    >
+                    <div class="flex-1">
+                      <span class="text-[#e2e2e9] font-medium"
+                        >Elena Vance</span
+                      >
+                      linked PR
+                      <span class="font-mono text-[#a8c7fa]">#892</span>
+                      <span class="text-[#8e9099] ml-1">2h ago</span>
+                    </div>
+                  </div>
+                  <!-- Event 2 -->
+                  <div class="flex items-start gap-2 text-xs">
+                    <span
+                      class="material-symbols-outlined text-sm text-[#b4f1be] mt-0.5"
+                      >task_alt</span
+                    >
+                    <div class="flex-1">
+                      <span class="text-[#e2e2e9] font-medium">CI Bot</span>
+                      verified all build steps
+                      <span class="text-[#8e9099] ml-1">1h ago</span>
+                    </div>
+                  </div>
+                  <!-- Comment Item -->
+                  <div
+                    class="flex items-start gap-2.5 p-3 rounded-2xl bg-[#282a2f] border border-[#44474f]/30"
+                  >
+                    <img
+                      class="w-6 h-6 rounded-full object-cover mt-0.5"
+                      data-alt="Marcus Brody"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUlPgBHFL4SqVB2omqdNWCfYHfVl_hAtrYRrvFeVwvEbzh8Zmuaep1okgRKPEuatVo5JX7e7CALARz0ROew0GeIbzvIHCW5acjb2AvgDLbEGRc7l41tahwWavpC61qKOBc-ZYfNufRtfrtJ7WSCdTk5Nz-w6NulHhkFWDogC2fZXuZd6YahPUqVyOdVnw6vysoyLw1RCYMrZ8Zc4YdWWP2eZhjwfYHyCQ0yG8Ibg_UETNGv83H48E8"
+                    />
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-semibold text-[#e2e2e9]"
+                          >Marcus Brody</span
+                        >
+                        <span class="font-mono text-[10px] text-[#8e9099]"
+                          >45m ago</span
+                        >
+                      </div>
+                      <p class="text-xs text-[#c4c6d0] leading-relaxed mb-2">
+                        The OCSP stapling fallback path looks rock solid. Make
+                        sure we monitor handshake overhead on staging before
+                        flipping production canary.
+                      </p>
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#e2e2e9] flex items-center gap-1 font-medium"
+                          >👍 2</span
+                        >
+                        <span
+                          class="text-[10px] px-2 py-0.5 rounded-full bg-[#1d2024] text-[#e2e2e9] flex items-center gap-1 font-medium"
+                          >🚀 1</span
+                        >
+                        <button
+                          class="text-xs text-[#8e9099] hover:text-[#e2e2e9] font-medium ml-1"
+                        >
+                          Reply
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Inline Comment Composer -->
+                  <div
+                    class="rounded-2xl bg-[#282a2f] p-3 flex flex-col gap-2 border border-[#44474f]/40 focus-within:border-[#a8c7fa] focus-within:ring-1 focus-within:ring-[#a8c7fa] transition-all"
+                  >
+                    <textarea
+                      class="w-full bg-transparent text-xs text-[#e2e2e9] placeholder-[#8e9099] border-0 focus:ring-0 resize-none p-0"
+                      placeholder="Write a comment... (Markdown supported)"
+                      rows="2"
+                    ></textarea>
+                    <div
+                      class="flex items-center justify-between pt-2 border-t border-[#44474f]/25"
+                    >
+                      <div class="flex items-center gap-1 text-[#8e9099]">
+                        <button
+                          class="w-6 h-6 rounded-full hover:bg-[#33353a] flex items-center justify-center hover:text-[#e2e2e9]"
+                        >
+                          <span class="material-symbols-outlined text-xs"
+                            >format_bold</span
+                          >
+                        </button>
+                        <button
+                          class="w-6 h-6 rounded-full hover:bg-[#33353a] flex items-center justify-center hover:text-[#e2e2e9]"
+                        >
+                          <span class="material-symbols-outlined text-xs"
+                            >code</span
+                          >
+                        </button>
+                        <button
+                          class="w-6 h-6 rounded-full hover:bg-[#33353a] flex items-center justify-center hover:text-[#e2e2e9]"
+                        >
+                          <span class="material-symbols-outlined text-xs"
+                            >attach_file</span
+                          >
+                        </button>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono text-[10px] text-[#8e9099]"
+                          >⌘↵ to send</span
+                        >
+                        <button
+                          class="px-3 py-1 rounded-full bg-[#0842a0] text-[#d3e3fd] text-xs font-semibold hover:bg-[#0b4ebc] transition-colors"
+                        >
+                          Comment
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Side Sheet Footer Ribbon -->
+              <div
+                class="flex-none p-4 bg-[#282a2f] border-t border-[#44474f]/30 flex items-center justify-between"
+              >
+                <div class="flex items-center gap-2">
+                  <button
+                    class="px-3 py-1.5 rounded-full hover:bg-[#33353a] text-[#ffb4ab] text-xs font-medium transition-colors"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    class="px-3 py-1.5 rounded-full hover:bg-[#33353a] text-[#8e9099] hover:text-[#e2e2e9] text-xs font-medium transition-colors"
+                  >
+                    Archive
+                  </button>
+                </div>
+                <!-- MD3 Success Action Button "Move to Done [M]" -->
+                <div class="flex items-center gap-2">
+                  <button
+                    class="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#b4f1be] text-[#003919] text-xs font-semibold hover:bg-[#cbf7d2] transition-all shadow-sm active:scale-95"
+                  >
+                    <span class="material-symbols-outlined text-sm">check</span>
+                    <span class="">Move to Done</span>
+                    <kbd
+                      class="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-[#003919]/20 text-[#003919] ml-1"
+                      >M</kbd
+                    >
+                  </button>
+                </div>
+              </div>
+            </aside>
+          </div>
+          <footer
+            class="flex-none h-9 bg-[#191c20] border-t border-[#44474f]/30 px-5 flex items-center justify-between text-xs select-none z-30"
+          >
+            <div class="flex items-center gap-4">
+              <div
+                class="flex items-center gap-2 text-[#8e9099] text-xs font-medium"
+              >
+                <span class="text-[#e2e2e9] font-semibold">28</span>
+                tickets<span class="text-[#8e9099]">•</span
+                ><span class="text-[#e2e2e9] font-semibold">42</span> SP<span
+                  class="text-[#8e9099]"
+                  >•</span
+                ><span class="text-[#ffdcc1] font-semibold">8</span> in review
+              </div>
+              <div class="h-3.5 w-[1px] bg-[#44474f]/30"></div>
+              <button
+                class="flex items-center gap-2 hover:text-[#e2e2e9] text-[#c4c6d0] text-xs transition-colors group"
+                title="GitHub Repository VCS Sync"
+              >
+                <span class="material-symbols-outlined text-sm text-[#b4f1be]"
+                  >check_circle</span
+                ><span class="font-mono text-[11px]">GitHub Synced 2m ago</span
+                ><span
+                  class="material-symbols-outlined text-xs text-[#8e9099] group-hover:text-[#e2e2e9]"
+                  >sync</span
+                >
+              </button>
+            </div>
+            <div class="flex items-center gap-3 text-[#8e9099] text-xs">
+              <span class="flex items-center gap-1.5 font-mono text-[11px]"
+                ><span class="w-2 h-2 rounded-full bg-[#b4f1be]"></span
+                >Online</span
+              ><span class="text-[#44474f]">•</span
+              ><span class="font-mono text-[11px] text-[#8e9099]"
+                >Sprint 14: 5d remaining</span
+              >
+            </div>
+          </footer>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
