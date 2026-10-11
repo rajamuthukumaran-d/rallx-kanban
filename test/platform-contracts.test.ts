@@ -31,8 +31,10 @@ describe("delivery contracts", () => {
   it("documents explicit migration deployment and ignores build secrets", () => {
     expect(read(".dockerignore")).toContain(".env");
     expect(read("README.md")).toContain("prisma migrate deploy");
-    expect(read("docker-compose.yml")).toContain(
-      "DATABASE_URL:?set DATABASE_URL",
-    );
+    const compose = read("docker-compose.yml");
+    expect(compose).toContain("@db:5432/");
+    expect(compose).toContain("rallx-network:");
+    expect(compose).toContain("ipv4_address: 172.30.0.2");
+    expect(compose).toContain("ipv4_address: 172.30.0.3");
   });
 });

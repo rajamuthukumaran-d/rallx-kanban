@@ -24,7 +24,7 @@ docker compose config
 docker build -t rallx-kanban .
 ```
 
-For a local database, copy `.env.example` to `.env` and set non-production development values. The committed baseline is `prisma/migrations/0001_initial/migration.sql`; apply it with `npm run prisma:migrate:deploy` (or `npx prisma migrate dev` for local schema iteration). Compose requires an explicit `DATABASE_URL`, `POSTGRES_PASSWORD`, and `AUTH_SECRET`; set `DATABASE_URL` using the same `POSTGRES_USER` and `POSTGRES_DB` values as the database service, for example `postgresql://appuser:password@db:5432/rallx`.
+For a local database, copy `.env.example` to `.env` and set non-production development values. The committed baseline is `prisma/migrations/0001_initial/migration.sql`; apply it with `npm run prisma:migrate:deploy` (or `npx prisma migrate dev` for local schema iteration). Compose requires `POSTGRES_PASSWORD` and `AUTH_SECRET`; it builds the container-only `DATABASE_URL` with the `db` service hostname and does not use a host-side `localhost:5432` URL. The app and database are attached to the `rallx-network` bridge with stable addresses `172.30.0.3` and `172.30.0.2` respectively. For direct host-side Prisma commands, use a separate `DATABASE_URL` pointing to `localhost` and the published database port if you publish one.
 
 ### Release procedure
 
