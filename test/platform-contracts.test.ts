@@ -32,6 +32,8 @@ describe("delivery contracts", () => {
     expect(read(".dockerignore")).toContain(".env");
     expect(read("README.md")).toContain("prisma migrate deploy");
     const compose = read("docker-compose.yml");
+    expect(read(".gitignore")).toContain(".local/");
+    expect(compose).toContain("./.local/postgres:/var/lib/postgresql/data");
     expect(compose).toContain("@db:5432/");
     expect(compose).toContain("rallx-network:");
     expect(compose).toContain("ipv4_address: 172.30.0.2");
