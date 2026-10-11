@@ -21,7 +21,9 @@
 html,
 body {
   margin: 0;
-  min-height: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: Inter, system-ui, sans-serif;
@@ -36,6 +38,16 @@ button {
   cursor: pointer;
   color: inherit;
 }
+button svg,
+.chip svg,
+.primary svg,
+.nav-item svg,
+.view-tabs svg {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
@@ -46,11 +58,14 @@ textarea:focus-visible {
   font-family: "JetBrains Mono", monospace;
 }
 .app-shell {
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 0;
   display: flex;
   padding-bottom: env(safe-area-inset-bottom);
+  overflow: hidden;
 }
 .rail {
+  height: 100%;
   width: 240px;
   background: var(--surface);
   border-right: 1px solid #43474f55;
@@ -192,6 +207,8 @@ textarea:focus-visible {
 }
 .workspace {
   min-width: 0;
+  min-height: 0;
+  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -237,6 +254,26 @@ textarea:focus-visible {
 .toolbar-bottom {
   margin-top: 12px;
 }
+.toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.select-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--dim);
+  font-size: 11px;
+}
+.select-control select {
+  border: 1px solid #43474f99;
+  border-radius: 8px;
+  background: var(--surface2);
+  color: var(--text);
+  padding: 6px 24px 6px 8px;
+  font-size: 11px;
+}
 .filter-search {
   height: 34px;
   width: min(340px, 55vw);
@@ -272,6 +309,7 @@ textarea:focus-visible {
 }
 .board {
   display: flex;
+  min-height: 0;
   gap: 14px;
   overflow: auto;
   padding: 16px;
@@ -287,7 +325,7 @@ textarea:focus-visible {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 170px);
+  min-height: 0;
 }
 .column-head {
   display: flex;
@@ -335,6 +373,11 @@ textarea:focus-visible {
   justify-content: space-between;
   gap: 8px;
 }
+.ticket-signals {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
 .ticket-key {
   color: var(--primary);
   font: 600 11px "JetBrains Mono";
@@ -360,7 +403,16 @@ textarea:focus-visible {
   color: var(--muted);
 }
 .priority {
-  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 13px;
+}
+.priority svg {
+  width: 14px;
+  height: 14px;
 }
 .urgent {
   color: var(--error);
@@ -381,6 +433,7 @@ textarea:focus-visible {
   border-left: 1px solid #43474f99;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 .inspector-head {
   padding: 14px 18px;
@@ -395,6 +448,7 @@ textarea:focus-visible {
   overflow: auto;
   display: grid;
   gap: 16px;
+  min-height: 0;
 }
 .inspector h2 {
   font-size: 16px;
@@ -443,6 +497,62 @@ textarea:focus-visible {
   font-size: 11px;
   line-height: 1.5;
   color: var(--muted);
+}
+.comment p {
+  margin: 9px 0 0;
+}
+.comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.comment-header > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.comment-menu {
+  position: relative;
+}
+.comment-menu summary {
+  display: grid;
+  place-items: center;
+  list-style: none;
+  cursor: pointer;
+  color: var(--dim);
+  padding: 3px;
+  border-radius: 6px;
+}
+.comment-menu summary::-webkit-details-marker {
+  display: none;
+}
+.comment-menu summary:hover {
+  background: var(--surface4);
+  color: var(--text);
+}
+.comment-menu-items {
+  position: absolute;
+  right: 0;
+  top: 28px;
+  z-index: 3;
+  display: grid;
+  min-width: 90px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface2);
+  box-shadow: 0 8px 18px #0006;
+}
+.comment-menu-items button {
+  background: transparent;
+  text-align: left;
+  padding: 7px 9px;
+  border-radius: 5px;
+  font-size: 11px;
+}
+.comment-menu-items button:hover {
+  background: var(--surface4);
 }
 textarea {
   resize: vertical;
@@ -583,8 +693,23 @@ html[data-theme="light"] .status-pill {
     background: none;
     color: var(--muted);
     font-size: 11px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
   }
   .footer {
     display: none;
+  }
+  .toolbar-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .select-control {
+    flex: 1;
+    justify-content: space-between;
+  }
+  .select-control select {
+    flex: 1;
   }
 }

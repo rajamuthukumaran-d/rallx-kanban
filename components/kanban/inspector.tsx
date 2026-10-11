@@ -1,4 +1,19 @@
+import { FiMoreHorizontal, FiX } from "react-icons/fi";
 import type { LocalTicket } from "./types";
+
+function CommentMenu() {
+  return (
+    <details className="comment-menu">
+      <summary aria-label="Comment options">
+        <FiMoreHorizontal aria-hidden="true" />
+      </summary>
+      <div className="comment-menu-items">
+        <button type="button">Edit</button>
+        <button type="button">Delete</button>
+      </div>
+    </details>
+  );
+}
 
 export function Inspector({
   t,
@@ -29,7 +44,7 @@ export function Inspector({
           </span>
         </div>
         <button onClick={close} aria-label="Close ticket inspector">
-          ✕
+          <FiX aria-hidden="true" />
         </button>
       </div>
       <div className="inspector-body">
@@ -104,15 +119,28 @@ export function Inspector({
             Activity & discussion · {t.comments} events
           </div>
           <div className="comment">
-            <b>Elena Vance</b> linked mock PR{" "}
-            <span className="ticket-key">{t.pr || "#892"}</span>
-            <div className="muted">2h ago</div>
+            <div className="comment-header">
+              <span>
+                <b>Elena Vance</b>
+                <span className="muted">2h ago</span>
+              </span>
+              <CommentMenu />
+            </div>
+            <p>
+              linked mock PR{" "}
+              <span className="ticket-key">{t.pr || "#892"}</span>
+            </p>
           </div>
           {comments.map((text, index) => (
             <div className="comment" key={`${text}-${index}`}>
-              <b>Elena Vance</b>
+              <div className="comment-header">
+                <span>
+                  <b>Elena Vance</b>
+                  <span className="muted">Just now</span>
+                </span>
+                <CommentMenu />
+              </div>
               <p>{text}</p>
-              <div className="muted">Just now · local prototype state</div>
             </div>
           ))}
           <textarea

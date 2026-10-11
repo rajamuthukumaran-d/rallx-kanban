@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { FiBarChart2, FiGrid, FiList, FiPlus, FiSliders } from "react-icons/fi";
 import { initialTickets, type Status } from "../../test/mock-data";
 import { Archive, Settings } from "./views";
 import { Board } from "./board";
 import { Inspector } from "./inspector";
 import { MobileNav, Sidebar } from "./sidebar";
-import type { LocalTicket, Theme } from "./types";
+import type { GroupBy, LocalTicket, OrderBy, Theme } from "./types";
 
 export default function KanbanApp() {
   const [tickets, setTickets] = useState<LocalTicket[]>(initialTickets);
   const [selected, setSelected] = useState("RLX-1042");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
+  const [groupBy, setGroupBy] = useState<GroupBy>("status");
+  const [orderBy, setOrderBy] = useState<OrderBy>("priority");
   const [view, setView] = useState("board");
   const [dragged, setDragged] = useState<string | null>(null);
   const [comment, setComment] = useState("");
@@ -44,21 +47,25 @@ export default function KanbanApp() {
     localStorage.setItem("rallx-comments", JSON.stringify(commentHistory));
   }, [commentHistory]);
 
-  const visible = useMemo(
-    () =>
-      tickets.filter(
-        (t) =>
-          !t.archived &&
-          (t.id + " " + t.title + " " + t.tags.join(" "))
-            .toLowerCase()
-            .includes(query.toLowerCase()) &&
-          (filter === "all" ||
-            (filter === "mine"
-              ? t.assignee === "Elena Vance"
-              : t.priority === "urgent")),
-      ),
-    [tickets, query, filter],
-  );
+  const visible = useMemo(() => {
+    const filtered = tickets.filter(
+      (t) =>
+        !t.archived &&
+        (t.id + " " + t.title + " " + t.tags.join(" "))
+          .toLowerCase()
+          .includes(query.toLowerCase()) &&
+        (filter === "all" ||
+          (filter === "mine"
+            ? t.assignee === "Elena Vance"
+            : t.priority === "urgent")),
+    );
+    const priorityRank = { urgent: 0, high: 1, medium: 2, low: 3 };
+    return filtered.sort((a, b) => {
+      if (orderBy === "points") return b.points - a.points;
+      if (orderBy === "title") return a.title.localeCompare(b.title);
+      return priorityRank[a.priority] - priorityRank[b.priority];
+    });
+  }, [tickets, query, filter, orderBy]);
   const archived = tickets.filter((t) => t.archived);
   const selectedTicket = tickets.find((t) => t.id === selected);
 
@@ -142,6 +149,10 @@ export default function KanbanApp() {
           onQueryChange={setQuery}
           filter={filter}
           onFilterChange={setFilter}
+          groupBy={groupBy}
+          onGroupChange={setGroupBy}
+          orderBy={orderBy}
+          onOrderChange={setOrderBy}
         />
         {view === "settings" ? (
           <Settings theme={theme} setTheme={setTheme} />
@@ -158,6 +169,7 @@ export default function KanbanApp() {
               onDragEnd={() => setDragged(null)}
               onDrop={drop}
               onAdd={add}
+              groupBy={groupBy}
             />
             {selectedTicket && (
               <Inspector
@@ -200,6 +212,10 @@ function Toolbar({
   onQueryChange,
   filter,
   onFilterChange,
+  groupBy,
+  onGroupChange,
+  orderBy,
+  onOrderChange,
 }: {
   view: string;
   onViewChange: (view: string) => void;
@@ -208,6 +224,10 @@ function Toolbar({
   onQueryChange: (query: string) => void;
   filter: string;
   onFilterChange: (filter: string) => void;
+  groupBy: GroupBy;
+  onGroupChange: (groupBy: GroupBy) => void;
+  orderBy: OrderBy;
+  onOrderChange: (orderBy: OrderBy) => void;
 }) {
   return (
     <header className="toolbar">
@@ -217,20 +237,20 @@ function Toolbar({
             className={view === "board" ? "active" : ""}
             onClick={() => onViewChange("board")}
           >
-            ▦ Board
+            <FiGrid aria-hidden="true" /> Board
           </button>
           <button
             className={view === "backlog" ? "active" : ""}
             onClick={() => onViewChange("backlog")}
           >
-            ☷ List
+            <FiList aria-hidden="true" /> List
           </button>
           <button disabled title="Analytics is not implemented">
-            ⌁ Analytics
+            <FiBarChart2 aria-hidden="true" /> Analytics
           </button>
         </div>
         <button className="primary" onClick={onAdd}>
-          ＋ New Ticket <span className="mono">C</span>
+          <FiPlus aria-hidden="true" /> New Ticket
         </button>
       </div>
       <div className="toolbar-bottom">
@@ -246,7 +266,7 @@ function Toolbar({
             className={filter === "all" ? "chip selected" : "chip"}
             onClick={() => onFilterChange("all")}
           >
-            ⚙ Filter
+            <FiSliders aria-hidden="true" /> Filter
           </button>
           <button
             className={filter === "mine" ? "chip selected" : "chip"}
@@ -261,8 +281,29 @@ function Toolbar({
             Urgent
           </button>
         </div>
-        <div className="muted toolbar-summary">
-          Group: <b>Status</b>　•　Order: <b>Priority</b>
+        <div className="toolbar-controls">
+          <label className="select-control">
+            <span>Group</span>
+            <select
+              value={groupBy}
+              onChange={(event) => onGroupChange(event.target.value as GroupBy)}
+            >
+              <option value="status">Status</option>
+              <option value="assignee">Assignee</option>
+              <option value="priority">Priority</option>
+            </select>
+          </label>
+          <label className="select-control">
+            <span>Order</span>
+            <select
+              value={orderBy}
+              onChange={(event) => onOrderChange(event.target.value as OrderBy)}
+            >
+              <option value="priority">Priority</option>
+              <option value="points">Story points</option>
+              <option value="title">Title</option>
+            </select>
+          </label>
         </div>
       </div>
     </header>

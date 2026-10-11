@@ -1,7 +1,20 @@
+import type { ReactNode } from "react";
+import {
+  FiArchive,
+  FiChevronLeft,
+  FiChevronRight,
+  FiGrid,
+  FiList,
+  FiMoon,
+  FiPlus,
+  FiSearch,
+  FiSettings,
+  FiSun,
+} from "react-icons/fi";
 type NavProps = {
   active?: boolean;
   onClick: () => void;
-  label: string;
+  label: ReactNode;
   count?: number;
 };
 
@@ -55,7 +68,7 @@ export function Sidebar({
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             onClick={onToggle}
           >
-            {collapsed ? "›" : "‹"}
+            {collapsed ? <FiChevronRight /> : <FiChevronLeft />}
           </button>
         </div>
         <div className="tenant">
@@ -71,31 +84,48 @@ export function Sidebar({
         }
         aria-label="Focus ticket filter"
       >
-        ⌕ Command / Filter <span className="mono shortcut">⌘K</span>
+        <FiSearch aria-hidden="true" /> Command / Filter{" "}
+        <span className="mono shortcut">⌘K</span>
       </button>
       <nav className="nav" aria-label="Workspace navigation">
         <div className="section-label">Workspace</div>
         <Nav
           active={view === "board"}
           onClick={() => onViewChange("board")}
-          label="▦　Board"
+          label={
+            <>
+              <FiGrid aria-hidden="true" /> Board
+            </>
+          }
           count={visibleCount}
         />
         <Nav
           onClick={() => onViewChange("board")}
-          label="◎　My Work"
+          label={
+            <>
+              <FiList aria-hidden="true" /> My Work
+            </>
+          }
           count={4}
         />
         <Nav
           active={view === "backlog"}
           onClick={() => onViewChange("backlog")}
-          label="☷　Backlog"
+          label={
+            <>
+              <FiList aria-hidden="true" /> Backlog
+            </>
+          }
           count={backlogCount}
         />
         <Nav
           active={view === "archive"}
           onClick={() => onViewChange("archive")}
-          label="▱　Archive"
+          label={
+            <>
+              <FiArchive aria-hidden="true" /> Archive
+            </>
+          }
           count={archivedCount}
         />
         <div className="section-label">Pinned projects</div>
@@ -121,14 +151,18 @@ export function Sidebar({
         <Nav
           active={view === "settings"}
           onClick={() => onViewChange("settings")}
-          label="⚙　Settings"
+          label={
+            <>
+              <FiSettings aria-hidden="true" /> Settings
+            </>
+          }
         />
         <button
           className="nav-item"
           onClick={() => onThemeChange(theme === "dark" ? "light" : "dark")}
           aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
         >
-          ☾ Theme
+          {theme === "dark" ? <FiMoon /> : <FiSun />} Theme
         </button>
         <div className="profile">
           <div className="avatar">EV</div>
@@ -152,19 +186,19 @@ export function MobileNav({
   return (
     <nav className="mobile-nav" aria-label="Mobile navigation">
       <button onClick={() => onViewChange("board")} aria-label="Board">
-        ▦<br />
+        <FiGrid aria-hidden="true" />
         Board
       </button>
       <button onClick={() => onViewChange("backlog")} aria-label="Backlog">
-        ☷<br />
+        <FiList aria-hidden="true" />
         Backlog
       </button>
       <button onClick={onAdd} aria-label="New ticket">
-        ＋<br />
+        <FiPlus aria-hidden="true" />
         New
       </button>
       <button onClick={() => onViewChange("settings")} aria-label="Settings">
-        ⚙<br />
+        <FiSettings aria-hidden="true" />
         Settings
       </button>
     </nav>
